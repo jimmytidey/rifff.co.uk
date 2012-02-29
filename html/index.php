@@ -15,13 +15,12 @@
 				
 				<p>Someone's vinyl collection says a lot about them, but who could say they really care about every song on their iPod?</p>
 				
-				<p>The convenience of MP3s is the reason for their success, but it also reduces the bond between people and their music. Rifff is the result of thinking about formats that engage users with their music collections by making them physical.</p>
+				<p>Convenience explains the ubiquity of MP3s, but convenience also diminishes the bond between people and their music. Rifff is the result of thinking about formats that engage us with music by making desirable objects an intrinsic part of the experience.</p>
 				
-				<p></p>
 				
-				<h3>What is it?</h3>
+				<h3>What is Rifff?</h3>
 				
-				<p>Rifff is a format that allows the composition of music that is different each time it is played, just like a live performance. Our focus is on our cloud-based composition tool and the physical player.</p>
+				<p>Rifff is a format that allows the composition of music that is different each time it is played, just like a live performance. We are developing a cloud-based composition tool and a physical player.</p>
 				
 				<p class='caption'><em>Composition tool</em></p>
 				<img src='resources/composer.png' />
