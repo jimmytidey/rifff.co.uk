@@ -32,9 +32,9 @@
 
 				<h3>How does this reconnect music with physical objects?</h3>
 				
-				<p>Music has always been affected by technology - the 3 minute pop song is a result of the length of 78rpm records. Now, we play music on devices capable of sophisticated computation, but we don't take advantage of it.</p>  
+				<p>Music has always been affected by technology - the 3 minute pop song is a result of the length of 78rpm records. Now, we play music on devices capable of sophisticated computation but we don't take advantage of it.</p>  
 				
-				<p>Rifff uses the power of playback devices to the full, and as a result Riffs cannot be shared via YouTube or similar. As a result, musicians can release music on a physical device and be sure that the music will always be deeply linked to that device - it cannot be copied up to the web.</p>				
+				<p>Rifff uses the power of playback devices to the full, and as a result Riffs cannot be shared via YouTube or similar. Musicians can release music on a physical device and be sure that the music will always be deeply linked to that device - it cannot be copied up to the web.</p>				
 				
 				<p>We are currently developing a physical Rifff player on Arduino, the prototype version will cost about £50. We believe this can be greatly reduced.</p> 
 
