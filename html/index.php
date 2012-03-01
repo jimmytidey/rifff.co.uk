@@ -5,6 +5,7 @@
 		<title>RIFFF</title>
 		<script type="text/javascript" charset="utf-8" src=''></script>
 		<link rel="stylesheet" href="css/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="icon" type="image/png"  href="favicon.ico">
 	</head>
 	<body id="index">
 		<div id='content'>
