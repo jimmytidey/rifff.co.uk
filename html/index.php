@@ -15,7 +15,7 @@
 				
 				<p>Someone's CD collection is deeply personal, but who could say they really care about every song on their iPod?</p>
 				
-				<p>Convenience explains the ubiquity of MP3s, but convenience can also diminish the bond between us and the music we listen to. Rifff is the result of thinking about formats that engage fans by making desirable objects an intrinsic part of the listening experience.</p>
+				<p>Everyone listens to MP3s because they are convenient, but convenience can also diminish the bond between us and the music we listen to. Rifff is the result of thinking about formats that engage fans by making desirable objects an intrinsic part of the listening experience.</p>
 				
 				<h3>What is Rifff?</h3>
 				
