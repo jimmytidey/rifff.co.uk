@@ -37,7 +37,8 @@
 				<p>Rifff takes advantage of ubiquitous and cheap computational power on playback devices. This specialisation means Riffs cannot be shared via YouTube or similar. Musicians can release music on a physical device and be sure that the music will always be deeply linked to that device - it cannot be copied up to the web.</p>				
 				
 				<p>We are currently developing a physical Rifff player on Arduino, the prototype version will cost about £50. We believe this can be greatly reduced.</p> 
-
+                
+                <object type='application/x-shockwave-flash' data='http://riff.jimmytidey.co.uk/FLASH%20SRC/random_seed_player.swf' width='800' height='200'><param name='flashvars' value='clickTag=&clickTarget=_blank' /><param name='allowScriptAccess' value='always' /><param name='movie' value='http://riff.jimmytidey.co.uk/FLASH%20SRC/random_seed_player.swf' /><param name='bgcolor' value='#000000'></object>
 				
 				<h3>Who is making Rifff?</h3>
 				<p>Digital producer / developer <a href='http://jimmytidey.co.uk' target='_blank' >Jimmy Tidey</a> &amp;
