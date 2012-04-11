@@ -38,7 +38,7 @@
 				
 				<p>We are currently developing a physical Rifff player on Arduino, the prototype version will cost about £50. We believe this can be greatly reduced.</p> 
                 
-                <object type='application/x-shockwave-flash' data='http://riff.jimmytidey.co.uk/FLASH%20SRC/random_seed_player.swf' width='800' height='200'><param name='flashvars' value='clickTag=&clickTarget=_blank' /><param name='allowScriptAccess' value='always' /><param name='movie' value='http://riff.jimmytidey.co.uk/FLASH%20SRC/random_seed_player.swf' /><param name='bgcolor' value='#000000'></object>
+                <object type='application/x-shockwave-flash' data='http://riff.jimmytidey.co.uk/FLASH%20SRC/random_seed_player.swf' width='800' height='200'><param name='flashvars'  /><param name='allowScriptAccess' value='always' /><param name='movie' value='http://riff.jimmytidey.co.uk/FLASH%20SRC/random_seed_player.swf' /></object>
 				
 				<h3>Who is making Rifff?</h3>
 				<p>Digital producer / developer <a href='http://jimmytidey.co.uk' target='_blank' >Jimmy Tidey</a> &amp;
