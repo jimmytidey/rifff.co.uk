@@ -83,12 +83,12 @@ foreach(glob($directory.'*.MP3') as $v){
 
 
 // Settings
- $project_name = explode('/', urldecode($_POST['project_name'])); // JIMMY 
+ $project_name = urldecode($_POST['project_name']); // JIMMY 
 
 
 	
 //	$save_path =  "../".urldecode($_POST['project_name'])."/".urldecode($_POST['bank_name'])."/".urldecode($_POST['bank_option_name']); // The path were we will save the file (getcwd() may not be reliable and should be tested in your environment)
-	$save_path = "../projects/".$project_name[0]."/".$project_name[1]."/".urldecode($_POST['bank_name'])."/".urldecode($_POST['bank_option_name'])."/";
+	$save_path = "../projects/". $_SESSION['user_id'] ."/".$project_name."/";
 	$save_path_escaped = escapeshellarg($save_path);
 	//delete any existing files
 	shell_exec("rm -f ".$save_path_escaped."*.mp3");
