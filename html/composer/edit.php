@@ -20,7 +20,7 @@
     <h1 id='files'><a href="upload/index.php?project_name=<? echo $_GET['project_name'] ?>" target='_blank'>Sample Upload</a></h1> 
   
     <div id="flash"> 
-    	<object type="application/x-shockwave-flash"  data="flash/random_seed_composer.swf?project_info_location=list.php?project_name=<? echo rawurlencode($_GET['project_name']) ?>"  width="960" height="2600">
+    	<object type="application/x-shockwave-flash"  data="flash/random_seed_composer.swf?project_name=<? echo rawurlencode($_GET['project_name']) ?>&username=<? echo $_SESSION['user_id'] ?>"  width="960" height="2600">
     	</object>
     </div>
     
