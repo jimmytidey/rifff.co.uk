@@ -63,7 +63,7 @@ Notes:
     // Settings
     $project_name = urldecode($_POST['project_name']); // JIMMY 
 
-	$save_path = "../projects/". $_SESSION['user_id'] ."/".$project_name."/";
+	$save_path = "../projects/". $_POST['user_id'] ."/".$project_name."/";
 	$save_path_escaped = escapeshellarg($save_path);
 		
 	 
