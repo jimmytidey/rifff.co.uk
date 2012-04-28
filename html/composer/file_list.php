@@ -9,7 +9,12 @@ if(!isset($user_id)) {
 }
 
 $list = structure_list("projects/$user_id/$project_name", 'file');
+if (empty($list)) { 
+    $list[0] = 'No files. Sorry';
+}
+
 $json = array();
+
 $json['files'] = $list;
 $json = json_encode($json);
 
