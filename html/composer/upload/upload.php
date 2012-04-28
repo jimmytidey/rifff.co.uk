@@ -62,25 +62,6 @@ Notes:
 
 $project_name = explode('/', urldecode($_GET['project_name'])); // JIMMY 
 
-$directory = "../projects/".$project_name[0]."/".$project_name[1]."/".urldecode($_GET['bank_name'])."/".urldecode($_GET['bank_option_name'])."/";
-
-foreach(glob($directory.'*.wav') as $v){
-	unlink($v);
-}
-
-foreach(glob($directory.'*.WAV') as $v){
-	unlink($v);
-}
-
-foreach(glob($directory.'*.mp3') as $v){
-	unlink($v);
-}
-
-foreach(glob($directory.'*.MP3') as $v){
-	unlink($v);
-}
-
-
 
 // Settings
  $project_name = urldecode($_POST['project_name']); // JIMMY 
@@ -90,11 +71,7 @@ foreach(glob($directory.'*.MP3') as $v){
 //	$save_path =  "../".urldecode($_POST['project_name'])."/".urldecode($_POST['bank_name'])."/".urldecode($_POST['bank_option_name']); // The path were we will save the file (getcwd() may not be reliable and should be tested in your environment)
 	$save_path = "../projects/". $_SESSION['user_id'] ."/".$project_name."/";
 	$save_path_escaped = escapeshellarg($save_path);
-	//delete any existing files
-	shell_exec("rm -f ".$save_path_escaped."*.mp3");
-	shell_exec("rm -f ".$save_path_escaped."*.MP3");	
-	shell_exec("rm -f ".$save_path_escaped."*.wav");
-	shell_exec("rm -f ".$save_path_escaped."*.WAV");		
+		
 	 
 	$upload_name = "Filedata";
 	$max_file_size_in_bytes = 2147483647;				// 2GB in bytes
