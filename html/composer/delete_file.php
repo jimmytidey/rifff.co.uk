@@ -10,7 +10,7 @@ if(!isset($user_id)) {
 }
 
 $location  = escapeshellcmd("projects/$user_id/$project_name/$file");
-chmod($location, 777); 
+chmod($location, 777);
 $value = unlink($location); 
 
 $json['delete'] = $value;
