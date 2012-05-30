@@ -2,7 +2,7 @@
 //include('header.php'); 
 include('functions.php');
 // get the project name from the get string 
-$project_name = $_POST['project_name'];
+$project_name = urldecode($_POST['project_name']);
 //echo $project_name;
 
 $json = stripslashes(urldecode($_POST['json']));

@@ -13,6 +13,8 @@ if (empty($list)) {
     $list[0] = 'No files. Sorry';
 }
 
+sort($list);
+
 $json = array();
 
 $json['files'] = $list;
