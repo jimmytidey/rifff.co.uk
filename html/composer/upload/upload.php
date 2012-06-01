@@ -69,9 +69,12 @@ Notes:
 	 
 	$upload_name = "Filedata";
 	$max_file_size_in_bytes = 2147483647;				// 2GB in bytes
-	$extension_whitelist = array("MP3", "WAV", "wav", "mp3");	// Allowed file extensions
+	$extension_whitelist = array("MP3", "mp3");	// Allowed file extensions
 	$valid_chars_regex = '.A-Z0-9_ !@#$%^&()+={}\[\]\',~`-';				// Characters allowed in the file name (in a Regular Expression format)
 	
+
+
+
 // Other variables	
 	$MAX_FILENAME_LENGTH = 260;
 	$file_name = "";
@@ -124,8 +127,8 @@ Notes:
 
 // Validate that we won't over-write an existing file
 	if (file_exists($save_path . $file_name)) {
-		HandleError("File with this name already exists");
-		exit(0);
+		//HandleError("File with this name already exists");
+		//exit(0);
 	}
 
 // Validate file extension
