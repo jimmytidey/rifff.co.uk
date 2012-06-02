@@ -5,6 +5,7 @@
 	
 	}
 	
+
 	#container {
 		position:absolute;
 		width: 1100px; 
@@ -52,6 +53,15 @@ object { outline:none}
 		margin-left:5px;
 		height:23px;
 	}	
+
+
+.help_link { 
+	margin-left:50px;
+}	
+
+.help { 
+	margin:50px;
+}
 	
 	#controls {
 		margin-bottom:40px; 

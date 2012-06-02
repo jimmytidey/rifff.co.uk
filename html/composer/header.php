@@ -11,7 +11,7 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
 
 if (isset($_SERVER['PHP_AUTH_USER'])) { 
 	//once they have validated, 
-	$authorisation = array('tom' => 'beard', 'ed' => 'williams', 'test' => 'test'); 
+	$authorisation = array('tom' => 'beard', 'ed' => 'williams', 'zai' => 'tang'); 
 
 	$allow = false;
 
