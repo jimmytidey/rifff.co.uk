@@ -74,7 +74,7 @@ session_start();
 
 <body>
     
-    <h3>Don't forget that you have to hit the "reload samples" button on the composer page.</h3>
+    <h3>Only MP3s. Don't forget that you have to hit the "reload samples" button on the composer page.</h3>
     
 	<form id="form1" action="index.php" method="post" enctype="multipart/form-data">
 		<div class="fieldset flash" id="fsUploadProgress">
