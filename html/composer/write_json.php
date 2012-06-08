@@ -3,6 +3,7 @@
 include('functions.php');
 // get the project name from the get string 
 $project_name = rawurldecode(rawurldecode($_POST['project_name']));
+$user_id = rawurldecode(rawurldecode($_POST['user_name']));
 
 $json = stripslashes(urldecode($_POST['json']));
 
