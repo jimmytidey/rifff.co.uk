@@ -10,7 +10,7 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
 	<link rel='stylesheet' href="style/style.css" >
-
+    <title> Edit -user: <?= $user_id ?></title>
 
     
 </head>
