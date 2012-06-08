@@ -45,7 +45,7 @@ if (!empty($_POST['project_name']))
 
 <div id='home_page'> 
 	
-	<h1 id='title'>RIFFF V2</h1>
+	<h1 id='title'>RIFFF V2  -user - <?= $user_id ?></h1>
 	
 	
 	<form method="post" action="index.php">
