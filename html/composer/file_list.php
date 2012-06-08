@@ -2,7 +2,6 @@
 include('header.php'); 
 include('functions.php');
 
-
 if(!isset($user_id)) { 
     $user_id = 'tom';
 }
@@ -17,6 +16,7 @@ sort($list);
 $json = array();
 
 $json['files'] = $list;
+$json['user_id'] = $user_id;
 $json = json_encode($json);
 
 header('Cache-Control: no-cache, must-revalidate');
