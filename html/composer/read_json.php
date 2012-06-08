@@ -3,7 +3,6 @@
 include('functions.php');
 // get the project name from the get string 
 $project_name = $_GET['project_name'];
-$user_id = rawurldecode(rawurldecode($_POST['user_name']));
 
 if(!isset($user_id)) { 
     $user_id = 'tom';
