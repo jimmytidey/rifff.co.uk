@@ -20,10 +20,8 @@
     
     <h1 id='title'><a href='../composer/'>&laquo; Back</a>&nbsp; &nbsp;<? echo $_GET['project_name'] ?></h1>
 
-
     <div id="flash"> 
-    	<object type="application/x-shockwave-flash"  data="flash/random_seed_player.swf?debug=false&project_name=<? echo rawurlencode($_GET['project_name']) ?>&username=<? echo $_SESSION['user_id'] ?>"  width="960" height="2600">
-    	</object>
+        <object type="application/x-shockwave-flash"  data="flash/random_seed_player.swf?debug=false&project_name=<? echo rawurlencode($_GET['project_name']) ?>&username=<? echo $_SESSION['user_id'] ?>"  width="500" height="500">    	</object>
     </div>
     
     <div class='help'> 

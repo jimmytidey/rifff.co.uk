@@ -23,7 +23,7 @@
   
     <br/> <br/><br/> <br/>
   	<p><a href='#help' class='help_link' > Click here for help</a></p>
-    <p><a href='play.php?project_name=<?= $_GET['project_name'] ?>'>  class='help_link' > Click here to view the player</a></p>
+    <p><a href='play.php?project_name=<?= $_GET['project_name'] ?>' class='help_link' > Click here to view the player</a></p>
 
     <div id="flash"> 
     	<object type="application/x-shockwave-flash"  data="flash/random_seed_composer.swf?debug=false&project_name=<? echo rawurlencode($_GET['project_name']) ?>&username=<? echo $_SESSION['user_id'] ?>"  width="960" height="2600">
