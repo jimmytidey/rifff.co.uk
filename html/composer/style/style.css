@@ -262,7 +262,7 @@ object { outline:none}
 		margin-left: -5px !important;
 	}
 	
-#edit{ 
+#edit { 
 	position:absolute;
 	width: 1000px; 
 	left:50%; 
@@ -271,6 +271,17 @@ object { outline:none}
 	background-color:white;
 	-moz-border-radius:15px;
 }	
+
+#player { 
+	position:absolute;
+	width: 1000px; 
+	left:50%; 
+	margin-left:-500px; 
+	border:1px solid black; 
+	background-color:white;
+	-moz-border-radius:15px;
+}	
+
 
 #flash {
 	margin-left:20px;	
