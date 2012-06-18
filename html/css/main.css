@@ -29,3 +29,7 @@ a:link, a:hover, a:active, a:visited {
 	text-align: right;
 	margin-bottom:0px;
 }
+
+#play #flash { 
+	margin-left:30px;
+}
