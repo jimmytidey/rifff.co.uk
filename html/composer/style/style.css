@@ -282,6 +282,10 @@ object { outline:none}
 	-moz-border-radius:15px;
 }	
 
+#play #flash { 
+	margin-left:50px;
+}
+
 
 #flash {
 	margin-left:20px;	
