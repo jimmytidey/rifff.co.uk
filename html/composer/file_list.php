@@ -1,5 +1,5 @@
 <?
-//include('header.php'); 
+include('header.php'); 
 include('functions.php');
 
 $project_name =$_GET['project_name'];
