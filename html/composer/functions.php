@@ -27,5 +27,16 @@ function read_json($file_location) {
 	return($data);
 }
 
+function db_connect() { 
+    $dbhost = 'localhost';
+    $dbuser = 'root';
+    $dbpass = 'root';
+
+    $conn = mysql_connect($dbhost, $dbuser, $dbpass) or die ('Error connecting to mysql');
+
+    $dbname = 'rifff';
+    mysql_select_db($dbname);
+}
+
 
 ?>

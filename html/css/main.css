@@ -33,3 +33,45 @@ a:link, a:hover, a:active, a:visited {
 #play #flash { 
 	margin-left:30px;
 }
+
+#user_nav { 
+	text-align:center;
+	
+}
+
+#auth { 
+	margin-top:30px;
+}
+
+#auth label { 
+	width:200px;
+	display:block;
+	float:left;
+	margin-top:4px;
+}
+#auth input { 
+
+	margin-top:4px;
+}
+
+#signup_submit { 
+	clear:both;
+	width:100%;
+	position:relative;
+	top:30px;
+	height: 30px;
+}
+
+#login_submit { 
+	clear:both;
+	width:100%;
+	position:relative;
+	top:30px;
+	height: 30px;
+}
+
+#errors { 
+	position:relative;
+	top:30px;
+	color:red;	
+}

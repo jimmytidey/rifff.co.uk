@@ -18,6 +18,8 @@
 				
 				<p>Everyone listens to MP3s because they are convenient, but convenience can also diminish the bond between us and the music we listen to. Rifff is the result of thinking about formats that engage fans by making desirable objects an intrinsic part of the listening experience.</p>
 				
+				<h3 id='user_nav' ><a href='signup.php'>Sign Up</a> | <a href='login.php'>Log In</a></h3>
+				
 				<h3>What is Rifff?</h3>
 				
 				<p>Rifff is a format that allows the composition of music that is (subtly) different every time it is played, just like a live performance. We are developing a cloud-based composition tool and a physical player.</p>

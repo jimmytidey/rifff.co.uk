@@ -27,6 +27,8 @@
 				
 				<br /><br />
 				
+				<h3><a href='signup.html'>Sign Up</a> | <a href='signup.html'>Log In</a></h3>
+				
 				<p class='caption'><em>Experimental embeddable web player</em></p>	
 				<img src='resources/player.png' />
 
