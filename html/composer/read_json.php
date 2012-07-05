@@ -5,7 +5,7 @@ include('functions.php');
 $project_name = $_GET['project_name'];
 
 if(!isset($user_id)) { 
-    $user_id = 'tom';
+    $user_id = 'demo';
 } 
 
 
