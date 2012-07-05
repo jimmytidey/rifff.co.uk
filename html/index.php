@@ -12,34 +12,51 @@
 			<img src='resources/title.png' />
 			
 			<div id='explain'>
-				<h3>Reconnecting music to physical objects</h3>
 				
-				<p>Someone's CD collection is deeply personal, but who could say they really care about every song on their iPod?</p>
+				<p>Music is nearly always played back on a computer - for example a smartphone or a laptop.</p>
 				
-				<p>Everyone listens to MP3s because they are convenient, but convenience can also diminish the bond between us and the music we listen to. Rifff is the result of thinking about formats that engage fans by making desirable objects an intrinsic part of the listening experience.</p>
+				<p>These devices have processing power, but it goes unused. Rifff is a project to explore compositions that playback differently each time.</p>
+				
+				<p>Rifff adds friction to music sharing, which is great for all kinds of reasons.</p>
+				
+				<p>Ultimately, we'd like to build a physical player that becomes the embodiment the music.</p>
+				
+				<p>Have a listen to a few test compositions below. Beware - they take a while to load.</p>
+				
+				<ul>
+				    <li><a href='public_play.php?project_name=Reckoner'>Radiohead - Reckoner (reversion using their stems)</a></li>
+				    <li>Ambient composition - Memba Dat</li>
+				    <li>Classic 12 bar blues</li>
+				</ul>
+				
+				<p><em>More compositions coming</em></p>
+				
+				<h3>Have a go</h3> 
 				
 				<h3 id='user_nav' ><a href='signup.php'>Sign Up</a> | <a href='login.php'>Log In</a></h3>
 				
-				<h3>What is Rifff?</h3>
+				<p>We are working on a desk top version at the moment</p>
 				
-				<p>Rifff is a format that allows the composition of music that is (subtly) different every time it is played, just like a live performance. We are developing a cloud-based composition tool and a physical player.</p>
+				<h3>Philosophy - Adding friction</h3>
+				
+				<p>If a song plays back differently each time - be it a lot or a little - then it can be made into an MP3.</p>
+				
+				<p>If it can't be made into an MP3, then it is harder to share.</p>
+				
+				<p>This isn't an attempt to make DRM happen. If an artist wants they can share the music by a freely available MP3 embed.</p>
+				
+				<p>What we'd love though is for artists to be able to get a bespoke physical device that plays back the RIFFF file. We're working on building that now.</p>
+				
 				
 				<p class='caption'><em>Composition tool</em></p>
 				<img src='resources/composer.png' />
 				
 				<br /><br />
 				
-				<p class='caption'><em>Experimental embeddable web player</em></p>	
-				<img src='resources/player.png' />
-
-				<h3>How does this reconnect music with physical objects?</h3>
-				
-				<p>Music has always been affected by technology - the 3 minute pop song is a result of the length of 78rpm records. Now, we play music on devices capable of sophisticated computation but treat the devices as though they CD players with more storage.</p>  
-				
-				<p>Rifff takes advantage of ubiquitous and cheap computational power on playback devices. This specialisation means Riffs cannot be shared via YouTube or similar. Musicians can release music on a physical device and be sure that the music will always be deeply linked to that device - it cannot be copied up to the web.</p>				
-				
-				<p>We are currently developing a physical Rifff player on Arduino, the prototype version will cost about £50. We believe this can be greatly reduced.</p> 
+                <h3>Friction, sharing, music</h3>
                 
+                <p></p>
+              
                 <object type='application/x-shockwave-flash' data='http://riff.jimmytidey.co.uk/FLASH%20SRC/random_seed_player.swf' width='500' height='300'><param name='flashvars'  /><param name='allowScriptAccess' value='always' /><param name='movie' value='http://riff.jimmytidey.co.uk/FLASH%20SRC/random_seed_player.swf' /></object>
 				
 				<h3>Who is making Rifff?</h3>
