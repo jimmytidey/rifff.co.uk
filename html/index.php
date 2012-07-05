@@ -24,14 +24,23 @@
 				<p>Have a listen to a few test compositions below. Beware - they take a while to load.</p>
 				
 				<ul>
-				    <li><a href='public_play.php?project_name=Reckoner'>Radiohead - Reckoner (reversion using their stems)</a></li>
-				    <li>Ambient composition - Memba Dat</li>
-				    <li>Classic 12 bar blues</li>
+				    <li><a href='public_play.php?project_name=Reckoner'>Radiohead - Reckoner (looong download)</a></li>
+				    <li><a href='public_play.php?project_name=Membadat'>Ambient composition - Memba Dat</a></li>
+				    <li><a href='public_play.php?project_name=Blues'>Classic 12 bar blues</a></li>
 				</ul>
 				
 				<p><em>More compositions coming</em></p>
 				
-				<h3>Have a go</h3> 
+				<br/>
+				<br/>
+				
+				<h3>Online composer</h3> 
+				
+				<p>You can play with the composition tool here:</p>
+				
+				<p style='text-align:center'>
+				    <img src='resources/composer.png' />
+				</p>
 				
 				<h3 id='user_nav' ><a href='signup.php'>Sign Up</a> | <a href='login.php'>Log In</a></h3>
 				
@@ -48,16 +57,13 @@
 				<p>What we'd love though is for artists to be able to get a bespoke physical device that plays back the RIFFF file. We're working on building that now.</p>
 				
 				
-				<p class='caption'><em>Composition tool</em></p>
-				<img src='resources/composer.png' />
+				<h3>I'm a geek...</h3>
 				
-				<br /><br />
+				<p>Go on then, have a look: https://github.com/jimmytidey/rifff.co.uk/</p>
 				
-                <h3>Friction, sharing, music</h3>
-                
-                <p></p>
-              
-                <object type='application/x-shockwave-flash' data='http://riff.jimmytidey.co.uk/FLASH%20SRC/random_seed_player.swf' width='500' height='300'><param name='flashvars'  /><param name='allowScriptAccess' value='always' /><param name='movie' value='http://riff.jimmytidey.co.uk/FLASH%20SRC/random_seed_player.swf' /></object>
+				<p style='text-align:center'>
+				    <img src='http://www.schrankmonster.de/wp-content/uploads/2010/09/octocat.png' width='200' />
+				</p>
 				
 				<h3>Who is making Rifff?</h3>
 				<p>Digital producer / developer <a href='http://jimmytidey.co.uk' target='_blank' >Jimmy Tidey</a> &amp;
