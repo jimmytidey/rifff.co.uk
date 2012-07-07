@@ -13,11 +13,13 @@
 			
 			<div id='explain'>
 				
+				<p><strong>[PROTOTYPE]</strong></p>
+				
 				<p>Music is nearly always played back on a computer - for example a smartphone or a laptop.</p>
 				
-				<p>These devices have processing power, but it goes unused. Rifff is a project to explore compositions that playback differently each time.</p>
+				<p>These devices have processing power, but it goes unused. Rifff is a project to explore compositions that playback differently each time by harnessing the power of the device they play back on.</p>
 				
-				<p>Rifff adds friction to music sharing, which is great for all kinds of reasons.</p>
+				<p>Rifff adds friction to music sharing, which is great for all <a href='#friction'>kinds of reasons</a>.</p>
 				
 				<p>Ultimately, we'd like to build a physical player that becomes the embodiment the music.</p>
 				
@@ -29,12 +31,11 @@
 				    <li><a href='public_play.php?project_name=Blues'>Classic 12 bar blues</a></li>
 				</ul>
 				
-				<p><em>More compositions coming</em></p>
+				<p><em>More compositions coming...</em></p>
 				
 				<br/>
-				<br/>
 				
-				<h3>Online composer</h3> 
+				<h3>Online composition tool</h3> 
 				
 				<p>You can play with the composition tool here:</p>
 				
@@ -44,17 +45,17 @@
 				
 				<h3 id='user_nav' ><a href='signup.php'>Sign Up</a> | <a href='login.php'>Log In</a></h3>
 				
-				<p>We are working on a desk top version at the moment</p>
+				<p>We are working on a desk top version at the moment.</p>
 				
-				<h3>Philosophy - Adding friction</h3>
+				<h3><a name='friction'></a>The Philosophy - Adding friction to sharing music</h3>
 				
 				<p>If a song plays back differently each time - be it a lot or a little - then it can be made into an MP3.</p>
 				
 				<p>If it can't be made into an MP3, then it is harder to share.</p>
 				
-				<p>This isn't an attempt to make DRM happen. If an artist wants they can share the music by a freely available MP3 embed.</p>
+				<p>This isn't an attempt to make DRM happen. If an artist wants they can share the music by a freely available Flash embed. But alternatively, they could share it as a phone app.</p>
 				
-				<p>What we'd love though is for artists to be able to get a bespoke physical device that plays back the RIFFF file. We're working on building that now.</p>
+				<p>Ultimately, we'd love to make a bespoke physical device that plays back the RIFFF file. We're working on building that now. That's where the project started: making a physical object that embodied music.</p>
 				
 				
 				<h3>I'm a geek...</h3>
