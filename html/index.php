@@ -54,11 +54,11 @@
 				
 				<p>If it can't be made into an MP3, then it is harder to share.</p>
 				
-				<p>This isn't about DRM. If an artist wants they can share the music by a freely available Flash embed on a website. But alternatively, they could share it as a phone app. Or...</p>
+				<p>This isn't about DRM. If an artist wants they can share the music by a freely available Flash embed on a website. Alternatively, they could share it as a phone app. Or...</p>
 				
 				<p>Ultimately, we'd love to make a bespoke physical device that plays back the RIFFF file. We're working on building that now. That's where the project started: making a physical object that embodies music and can't be made into an MP3.</p>
 				
-				<p>You used to be able to tell a lot about a person by their CD collection. MP3s mean nothing, because they are so disposable. Physical objects bring scarcity back.</p>
+				<p>You used to be able to tell a lot about a person by their CD collection. MP3s mean very little, exactly because they are so disposable. Physical objects bring scarcity back.</p>
 				
 				<h3>I'm a geek...</h3>
 				
