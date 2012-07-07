@@ -46,9 +46,9 @@
 				
 				<h3 id='user_nav' ><a href='signup.php'>Sign Up</a> | <a href='login.php'>Log In</a></h3>
 				
-				<p>We are working on a desk top version at the moment.</p>
+				<p>We are working on a desktop version at the moment.</p>
 				
-				<h3><a name='friction'></a>The Philosophy - Adding friction to sharing music</h3>
+				<h3><a name='friction'></a>Adding friction to sharing music</h3>
 				
 				<p>If a song plays back differently each time - be it a lot or a little - then it can be made into an MP3.</p>
 				
@@ -56,7 +56,7 @@
 				
 				<p>This isn't about DRM. If an artist wants they can share the music by a freely available Flash embed on a website. But alternatively, they could share it as a phone app. Or...</p>
 				
-				<p>Ultimately, we'd love to make a bespoke physical device that plays back the RIFFF file. We're working on building that now. That's where the project started: making a physical object that embodied music.</p>
+				<p>Ultimately, we'd love to make a bespoke physical device that plays back the RIFFF file. We're working on building that now. That's where the project started: making a physical object that embodies music and can't be made into an MP3.</p>
 				
 				<p>You used to be able to tell a lot about a person by their CD collection. MP3s mean nothing, because they are so disposable. Physical objects bring scarcity back.</p>
 				
