@@ -2,7 +2,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-		<title>RIFFF</title>
+		<meta name="google-site-verification" content="MI6YKWLtkibnb7caJT9wU-KlEVLVuPLfdgFhtnDtpfk" />
+		<meta name="Description" content="Algorithmic music composition and generative music composition" />
+		
+		<title>RIFFF - Algorithmic Music Composer </title>
 		<script type="text/javascript" charset="utf-8" src=''></script>
 		<link rel="stylesheet" href="css/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
 		<link rel="icon" type="image/png"  href="favicon.ico">
