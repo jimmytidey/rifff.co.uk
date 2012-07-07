@@ -17,9 +17,9 @@
 				
 				<p>Music is nearly always played back on a computer - for example a smartphone or a laptop.</p>
 				
-				<p>These devices have processing power, but it goes unused. Rifff is a project to explore compositions that make use of that untapped processing power.</p>
+				<p>Rifff is a project to explore compositions that make use of that untapped processing power.</p>
 				
-				<p>Rifff adds friction to music sharing, which is great for all <a href='#friction'>kinds of reasons</a>.</p>
+				<p>In doing this, Rifff adds friction to music sharing, which is great for all <a href='#friction'>kinds of reasons</a>.</p>
 				
 				<p>Ultimately, we'd like to build a physical player that becomes the embodiment the music.</p>
 				
@@ -37,11 +37,12 @@
 				
 				<h3>Online composition tool</h3> 
 				
-				<p>You can play with the composition tool here:</p>
-				
 				<p style='text-align:center'>
 				    <img src='resources/composer.png' />
-				</p>
+				</p>				
+				
+				<p>You can play with the composition tool here:</p>
+				
 				
 				<h3 id='user_nav' ><a href='signup.php'>Sign Up</a> | <a href='login.php'>Log In</a></h3>
 				
