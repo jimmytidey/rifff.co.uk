@@ -60,7 +60,7 @@
 				
 				<h3>I'm a geek...</h3>
 				
-				<p>Go on then, have a look: https://github.com/jimmytidey/rifff.co.uk/</p>
+				<p>Git repo coming soon.</p>
 				
 				<p style='text-align:center'>
 				    <img src='http://www.schrankmonster.de/wp-content/uploads/2010/09/octocat.png' width='200' />
