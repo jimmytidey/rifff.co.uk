@@ -16,7 +16,8 @@
 			
 			<div id='explain'>
 				
-				<p><strong>[PROTOTYPE]</strong></p>
+				<p><strong>[PROTOTYPE]</strong></p> 
+				<p>// <a href='blog'>Click here for the blog</a> // </p>
 				
 				<p>Music is nearly always played back on a computer - for example a smartphone or a laptop.</p>
 				
