@@ -68,6 +68,24 @@
 				    <img src='http://www.schrankmonster.de/wp-content/uploads/2010/09/octocat.png' width='200' />
 				</p>
 				
+				<h3>Keep updated</h3>
+                <!-- Begin MailChimp Signup Form -->
+                <link href="http://cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet" type="text/css">
+                <style type="text/css">
+                	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+                	/* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+                	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+                </style>
+                <div id="mc_embed_signup">
+                <form action="http://jimmytidey.us2.list-manage.com/subscribe/post?u=5ddec2f971f83d4fc68addf0c&amp;id=14648eeb35" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
+                	<label for="mce-EMAIL">Subscribe to our mailing list</label>
+                	<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+                	<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+                </form>
+                </div>
+
+                <!--End mc_embed_signup-->				
+				
 				<h3>Who is making Rifff?</h3>
 				<p>Digital producer / developer <a href='http://jimmytidey.co.uk' target='_blank' >Jimmy Tidey</a> &amp;
 				<a href='http://thomasjbryan.co.uk' target='_blank' >Tom Bryan</a>, musician.</p>
