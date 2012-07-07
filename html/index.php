@@ -17,7 +17,7 @@
 				
 				<p>Music is nearly always played back on a computer - for example a smartphone or a laptop.</p>
 				
-				<p>These devices have processing power, but it goes unused. Rifff is a project to explore compositions that playback differently each time by harnessing the power of the device they play back on.</p>
+				<p>These devices have processing power, but it goes unused. Rifff is a project to explore compositions that make use of that untapped processing power.</p>
 				
 				<p>Rifff adds friction to music sharing, which is great for all <a href='#friction'>kinds of reasons</a>.</p>
 				
@@ -53,10 +53,11 @@
 				
 				<p>If it can't be made into an MP3, then it is harder to share.</p>
 				
-				<p>This isn't an attempt to make DRM happen. If an artist wants they can share the music by a freely available Flash embed. But alternatively, they could share it as a phone app.</p>
+				<p>This isn't about DRM. If an artist wants they can share the music by a freely available Flash embed on a website. But alternatively, they could share it as a phone app. Or...</p>
 				
 				<p>Ultimately, we'd love to make a bespoke physical device that plays back the RIFFF file. We're working on building that now. That's where the project started: making a physical object that embodied music.</p>
 				
+				<p>You used to be able to tell a lot about a person by their CD collection. MP3s mean nothing, because they are so disposable. Physical objects bring scarcity back.</p>
 				
 				<h3>I'm a geek...</h3>
 				
