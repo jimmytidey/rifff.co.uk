@@ -51,7 +51,6 @@ $_old_files = array(
 'wp-includes/js/dbx-key.js',
 'wp-includes/js/tinymce/plugins/autosave/langs/cs.js',
 'wp-includes/js/tinymce/plugins/autosave/langs/sv.js',
-'wp-includes/js/tinymce/themes/advanced/editor_template_src.js',
 'wp-includes/links.php',
 'wp-includes/pluggable-functions.php',
 'wp-includes/template-functions-author.php',
@@ -359,11 +358,43 @@ $_old_files = array(
 'wp-includes/js/tinymce/themes/advanced/skins/wp_theme/img/down_arrow.gif',
 'wp-includes/js/tinymce/themes/advanced/skins/wp_theme/img/fade-butt.png',
 'wp-includes/js/tinymce/themes/advanced/skins/wp_theme/img/separator.gif',
+// Don't delete, yet: 'wp-rss.php',
+// Don't delete, yet: 'wp-rdf.php',
+// Don't delete, yet: 'wp-rss2.php',
+// Don't delete, yet: 'wp-commentsrss2.php',
+// Don't delete, yet: 'wp-atom.php',
+// Don't delete, yet: 'wp-feed.php',
 // 3.4
+'wp-admin/images/gray-star.png',
 'wp-admin/images/logo-login.png',
+'wp-admin/images/star.png',
 'wp-admin/index-extra.php',
 'wp-admin/network/index-extra.php',
 'wp-admin/user/index-extra.php',
+'wp-admin/images/screenshots/admin-flyouts.png',
+'wp-admin/images/screenshots/coediting.png',
+'wp-admin/images/screenshots/drag-and-drop.png',
+'wp-admin/images/screenshots/help-screen.png',
+'wp-admin/images/screenshots/media-icon.png',
+'wp-admin/images/screenshots/new-feature-pointer.png',
+'wp-admin/images/screenshots/welcome-screen.png',
+'wp-includes/css/editor-buttons.css',
+'wp-includes/css/editor-buttons.dev.css',
+'wp-includes/js/tinymce/plugins/paste/blank.htm',
+'wp-includes/js/tinymce/plugins/wordpress/css',
+'wp-includes/js/tinymce/plugins/wordpress/editor_plugin.dev.js',
+'wp-includes/js/tinymce/plugins/wordpress/img/embedded.png',
+'wp-includes/js/tinymce/plugins/wordpress/img/more_bug.gif',
+'wp-includes/js/tinymce/plugins/wordpress/img/page_bug.gif',
+'wp-includes/js/tinymce/plugins/wpdialogs/editor_plugin.dev.js',
+'wp-includes/js/tinymce/plugins/wpeditimage/css/editimage-rtl.css',
+'wp-includes/js/tinymce/plugins/wpeditimage/editor_plugin.dev.js',
+'wp-includes/js/tinymce/plugins/wpfullscreen/editor_plugin.dev.js',
+'wp-includes/js/tinymce/plugins/wpgallery/editor_plugin.dev.js',
+'wp-includes/js/tinymce/plugins/wpgallery/img/gallery.png',
+'wp-includes/js/tinymce/plugins/wplink/editor_plugin.dev.js',
+// Don't delete, yet: 'wp-pass.php',
+// Don't delete, yet: 'wp-register.php',
 );
 
 /**
@@ -446,7 +477,7 @@ function update_core($from, $to) {
 	$mysql_version  = $wpdb->db_version();
 	$required_php_version = '5.2.4';
 	$required_mysql_version = '5.0';
-	$wp_version = '3.4';
+	$wp_version = '3.4.1';
 	$php_compat     = version_compare( $php_version, $required_php_version, '>=' );
 	if ( file_exists( WP_CONTENT_DIR . '/db.php' ) && empty( $wpdb->is_mysql ) )
 		$mysql_compat = true;
@@ -641,7 +672,7 @@ function _copy_dir($from, $to, $skip_list = array() ) {
 /**
  * Redirect to the About WordPress page after a successful upgrade.
  *
- * This function is only needed when the existing install is older than 3.3.0 (3.4.0 for multisite).
+ * This function is only needed when the existing install is older than 3.4.0.
  *
  * @since 3.3.0
  *
@@ -649,13 +680,8 @@ function _copy_dir($from, $to, $skip_list = array() ) {
 function _redirect_to_about_wordpress( $new_version ) {
 	global $wp_version, $pagenow, $action;
 
-	if ( is_multisite() ) {
-		// Change to self_admin_url().
-		if ( version_compare( $wp_version, '3.4-alpha', '>=' ) )
-			return;
-	} elseif ( version_compare( $wp_version, '3.3', '>=' ) ) {
+	if ( version_compare( $wp_version, '3.4-RC1', '>=' ) )
 		return;
-	}
 
 	// Ensure we only run this on the update-core.php page. wp_update_core() could be called in other contexts.
 	if ( 'update-core.php' != $pagenow )

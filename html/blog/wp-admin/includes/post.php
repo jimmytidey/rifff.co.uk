@@ -747,7 +747,7 @@ function update_meta( $meta_id, $meta_key, $meta_value ) {
 function _fix_attachment_links( $post_ID ) {
 	$post = & get_post( $post_ID, ARRAY_A );
 	$content = $post['post_content'];
-	
+
 	// quick sanity check, don't run if no pretty permalinks or post is not published
 	if ( !get_option('permalink_structure') || $post['post_status'] != 'publish' )
 		return;
@@ -1145,8 +1145,9 @@ function _wp_post_thumbnail_html( $thumbnail_id = null, $post_id = null ) {
 	if ( empty( $post_id ) )
 		$post_id = $post_ID;
 
-	$set_thumbnail_link = '<p class="hide-if-no-js"><a title="' . esc_attr__( 'Set featured image' ) . '" href="' . esc_url( get_upload_iframe_src('image', $post_id) ) . '" id="set-post-thumbnail" class="thickbox">%s</a></p>';
-	$content = sprintf($set_thumbnail_link, esc_html__( 'Set featured image' ));
+	$upload_iframe_src = esc_url( get_upload_iframe_src('image', $post_id) );
+	$set_thumbnail_link = '<p class="hide-if-no-js"><a title="' . esc_attr__( 'Set featured image' ) . '" href="%s" id="set-post-thumbnail" class="thickbox">%s</a></p>';
+	$content = sprintf( $set_thumbnail_link, $upload_iframe_src, esc_html__( 'Set featured image' ) );
 
 	if ( $thumbnail_id && get_post( $thumbnail_id ) ) {
 		$old_content_width = $content_width;
@@ -1157,7 +1158,7 @@ function _wp_post_thumbnail_html( $thumbnail_id = null, $post_id = null ) {
 			$thumbnail_html = wp_get_attachment_image( $thumbnail_id, 'post-thumbnail' );
 		if ( !empty( $thumbnail_html ) ) {
 			$ajax_nonce = wp_create_nonce( "set_post_thumbnail-$post_id" );
-			$content = sprintf($set_thumbnail_link, $thumbnail_html);
+			$content = sprintf( $set_thumbnail_link, $upload_iframe_src, $thumbnail_html );
 			$content .= '<p class="hide-if-no-js"><a href="#" id="remove-post-thumbnail" onclick="WPRemoveThumbnail(\'' . $ajax_nonce . '\');return false;">' . esc_html__( 'Remove featured image' ) . '</a></p>';
 		}
 		$content_width = $old_content_width;

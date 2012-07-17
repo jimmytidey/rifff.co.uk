@@ -83,7 +83,7 @@ function uploadSuccess(fileObj, serverData) {
 	serverData = serverData.replace(/^<pre>(\d+)<\/pre>$/, '$1');
 
 	// if async-upload returned an error message, place it in the media item div and return
-	if ( serverData.match('media-upload-error') ) {
+	if ( serverData.match(/media-upload-error|error-div/) ) {
 		item.html(serverData);
 		return;
 	} else {
@@ -417,7 +417,7 @@ jQuery(document).ready(function($){
 
 			setResize( getUserSetting('upload_resize', false) );
 
-			if ( up.features.dragdrop ) {
+			if ( up.features.dragdrop && ! $(document.body).hasClass('mobile') ) {
 				uploaddiv.addClass('drag-drop');
 				$('#drag-drop-area').bind('dragover.wp-uploader', function(){ // dragenter doesn't fire right :(
 					uploaddiv.addClass('drag-over');

@@ -334,7 +334,7 @@ div#media-upload-header {
 	position: relative;
 	border-bottom-width: 1px;
 	border-bottom-style: solid;
-	height: 2.5em;
+	height: 33px;
 	background-color: #f9f9f9;
 	border-bottom-color: #dfdfdf;
 }
@@ -355,10 +355,6 @@ div#media-upload-error {
 #TB_window #TB_title {
 	background-color: #222222;
 	color: #CFCFCF;
-}
-
-#img-edit #img_cap_text {
-	font: normal 12px/18px monospace;
 }
 
 .hidden {

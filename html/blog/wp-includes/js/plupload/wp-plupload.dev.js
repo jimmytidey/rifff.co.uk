@@ -2,6 +2,11 @@ if ( typeof wp === 'undefined' )
 	var wp = {};
 
 (function( exports, $ ) {
+	var Uploader;
+
+	if ( typeof _wpPluploadSettings === 'undefined' )
+		return;
+
 	/*
 	 * An object that helps create a WordPress uploader using plupload.
 	 *
@@ -16,7 +21,7 @@ if ( typeof wp === 'undefined' )
 	 *
 	 * @param attributes - object - Attributes and methods for this specific instance.
 	 */
-	var Uploader = function( options ) {
+	Uploader = function( options ) {
 		var self = this,
 			elements = {
 				container: 'container',
@@ -25,8 +30,17 @@ if ( typeof wp === 'undefined' )
 			},
 			key;
 
+		this.supports = {
+			upload: Uploader.browser.supported
+		};
+
+		this.supported = this.supports.upload;
+
+		if ( ! this.supported )
+			return;
+
 		// Use deep extend to ensure that multipart_params and other objects are cloned.
-		this.plupload = $.extend( true, { multipart_params: {} }, wpPluploadDefaults );
+		this.plupload = $.extend( true, { multipart_params: {} }, Uploader.defaults );
 		this.container = document.body; // Set default container.
 
 		// Extend the instance with options
@@ -66,9 +80,40 @@ if ( typeof wp === 'undefined' )
 		this.param( this.params || {} );
 		delete this.params;
 
-		this.uploader.bind( 'Init', this.init );
-
 		this.uploader.init();
+
+		this.supports.dragdrop = this.uploader.features.dragdrop && ! Uploader.browser.mobile;
+
+		// Generate drag/drop helper classes.
+		(function( dropzone, supported ) {
+			var sensitivity = 50,
+				active;
+
+			if ( ! dropzone )
+				return;
+
+			dropzone.toggleClass( 'supports-drag-drop', !! supported );
+
+			if ( ! supported )
+				return dropzone.unbind('.wp-uploader');
+
+			// 'dragenter' doesn't fire correctly,
+			// simulate it with a limited 'dragover'
+			dropzone.bind( 'dragover.wp-uploader', function(){
+				if ( active )
+					return;
+
+				dropzone.addClass('drag-over');
+				active = true;
+			});
+
+			dropzone.bind('dragleave.wp-uploader, drop.wp-uploader', function(){
+				active = false;
+				dropzone.removeClass('drag-over');
+			});
+		}( this.dropzone, this.supports.dragdrop ));
+
+		this.browser.on( 'mouseenter', this.refresh );
 
 		this.uploader.bind( 'UploadProgress', this.progress );
 
@@ -114,7 +159,12 @@ if ( typeof wp === 'undefined' )
 			up.refresh();
 			up.start();
 		});
+
+		this.init();
 	};
+
+	// Adds the 'defaults' and 'browser' properties.
+	$.extend( Uploader, _wpPluploadSettings );
 
 	Uploader.uuid = 0;
 
@@ -160,7 +210,10 @@ if ( typeof wp === 'undefined' )
 		success:  function() {},
 		added:    function() {},
 		progress: function() {},
-		complete: function() {}
+		complete: function() {},
+		refresh:  function() {
+			this.uploader.refresh();
+		}
 	});
 
 	exports.Uploader = Uploader;

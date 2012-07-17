@@ -2996,7 +2996,7 @@ function get_current_theme() {
  */
 function clean_pre($matches) {
 	_deprecated_function( __FUNCTION__, '3.4' );
-	
+
 	if ( is_array($matches) )
 		$text = $matches[1] . $matches[2] . "</pre>";
 	else
@@ -3022,13 +3022,12 @@ function clean_pre($matches) {
  * @param callback $admin_head_callback Call on custom header administration screen.
  * @param callback $admin_preview_callback Output a custom header image div on the custom header administration screen. Optional.
  */
-function add_custom_image_header( $wp_head_callback = '', $admin_head_callback = '', $admin_preview_callback = '' ) {
+function add_custom_image_header( $wp_head_callback, $admin_head_callback, $admin_preview_callback = '' ) {
 	_deprecated_function( __FUNCTION__, '3.4', 'add_theme_support( \'custom-header\', $args )' );
-	$args = array();
-	if ( $wp_head_callback )
-		$args['wp-head-callback'] = $wp_head_callback;
-	if ( $admin_head_callback )
-		$args['admin-head-callback'] = $admin_head_callback;
+	$args = array(
+		'wp-head-callback'    => $wp_head_callback,
+		'admin-head-callback' => $admin_head_callback,
+	);
 	if ( $admin_preview_callback )
 		$args['admin-preview-callback'] = $admin_preview_callback;
 	return add_theme_support( 'custom-header', $args );
@@ -3112,8 +3111,13 @@ function get_theme_data( $theme_file ) {
 		'Status' => $theme->get('Status'),
 		'Tags' => $theme->get('Tags'),
 		'Title' => $theme->get('Name'),
-		'AuthorName' => $theme->display('Author', false, false),
+		'AuthorName' => $theme->get('Author'),
 	);
+
+	foreach ( apply_filters( 'extra_theme_headers', array() ) as $extra_header ) {
+		if ( ! isset( $theme_data[ $extra_header ] ) )
+			$theme_data[ $extra_header ] = $theme->get( $extra_header );
+	}
 
 	return $theme_data;
 }

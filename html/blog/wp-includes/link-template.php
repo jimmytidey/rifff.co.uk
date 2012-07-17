@@ -1372,9 +1372,11 @@ function adjacent_post_link($format, $link, $in_same_cat = false, $excluded_cate
  * @since 1.5.0
  *
  * @param int $pagenum Optional. Page ID.
+ * @param bool $escape Optional. Whether to escape the URL for display, with esc_url(). Defaults to true.
+* 	Otherwise, prepares the URL with esc_url_raw().
  * @return string
  */
-function get_pagenum_link($pagenum = 1) {
+function get_pagenum_link($pagenum = 1, $escape = true ) {
 	global $wp_rewrite;
 
 	$pagenum = (int) $pagenum;
@@ -1425,7 +1427,10 @@ function get_pagenum_link($pagenum = 1) {
 
 	$result = apply_filters('get_pagenum_link', $result);
 
-	return $result;
+	if ( $escape )
+		return esc_url( $result );
+	else
+		return esc_url_raw( $result );
 }
 
 /**
@@ -2190,6 +2195,36 @@ function self_admin_url($path = '', $scheme = 'admin') {
 		return user_admin_url($path, $scheme);
 	else
 		return admin_url($path, $scheme);
+}
+
+/**
+ * Set the scheme for a URL
+ *
+ * @since 3.4.0
+ *
+ * @param string $url Absolute url that includes a scheme
+ * @param string $scheme Optional. Scheme to give $url. Currently 'http', 'https', 'login', 'login_post', 'admin', or 'relative'.
+ * @return string $url URL with chosen scheme.
+ */
+function set_url_scheme( $url, $scheme = null ) {
+	$orig_scheme = $scheme;
+	if ( ! in_array( $scheme, array( 'http', 'https', 'relative' ) ) ) {
+		if ( ( 'login_post' == $scheme || 'rpc' == $scheme ) && ( force_ssl_login() || force_ssl_admin() ) )
+			$scheme = 'https';
+		elseif ( ( 'login' == $scheme ) && force_ssl_admin() )
+			$scheme = 'https';
+		elseif ( ( 'admin' == $scheme ) && force_ssl_admin() )
+			$scheme = 'https';
+		else
+			$scheme = ( is_ssl() ? 'https' : 'http' );
+	}
+
+	if ( 'relative' == $scheme )
+		$url = preg_replace( '#^.+://[^/]*#', '', $url );
+	else
+		$url = preg_replace( '#^.+://#', $scheme . '://', $url );
+
+	return apply_filters( 'set_url_scheme', $url, $scheme, $orig_scheme );
 }
 
 /**

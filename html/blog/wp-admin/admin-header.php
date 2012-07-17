@@ -90,19 +90,21 @@ $admin_body_class .= ' locale-' . sanitize_html_class( strtolower( str_replace( 
 if ( wp_is_mobile() )
 	$admin_body_class .= ' mobile';
 
+$admin_body_class .= ' no-customize-support';
+
 ?>
 </head>
 <body class="wp-admin no-js <?php echo apply_filters( 'admin_body_class', '' ) . " $admin_body_class"; ?>">
 <script type="text/javascript">
 	document.body.className = document.body.className.replace('no-js','js');
-<?php
-// If the customize loader is enqueued, then add the 'customize-support' class early.
-// This prevents a flash of unstyled content.
-if ( wp_script_is( 'customize-loader', 'queue' ) ) : ?>
-	if ( window.postMessage )
-		document.body.className += ' customize-support';
-<?php endif; ?>
 </script>
+
+<?php
+// If the customize-loader script is enqueued, make sure the customize
+// body classes are correct as early as possible.
+if ( wp_script_is( 'customize-loader', 'queue' ) && current_user_can( 'edit_theme_options' ) )
+	wp_customize_support_script();
+?>
 
 <div id="wpwrap">
 <?php require(ABSPATH . 'wp-admin/menu-header.php'); ?>

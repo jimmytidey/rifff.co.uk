@@ -82,6 +82,10 @@ function login_header($title = 'Log In', $message = '', $wp_error = '') {
 	$login_header_url   = apply_filters( 'login_headerurl',   $login_header_url   );
 	$login_header_title = apply_filters( 'login_headertitle', $login_header_title );
 
+	// Don't allow interim logins to navigate away from the page.
+	if ( $interim_login )
+		$login_header_url = '#';
+
 	?>
 	</head>
 	<body class="login<?php if ( wp_is_mobile() ) echo ' mobile'; ?>">
@@ -126,8 +130,13 @@ function login_header($title = 'Log In', $message = '', $wp_error = '') {
  * @param string $input_id Which input to auto-focus
  */
 function login_footer($input_id = '') {
-	?>
+	global $interim_login;
+
+	// Don't allow interim logins to navigate away from the page.
+	if ( ! $interim_login ): ?>
 	<p id="backtoblog"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php esc_attr_e( 'Are you lost?' ); ?>"><?php printf( __( '&larr; Back to %s' ), get_bloginfo( 'title', 'display' ) ); ?></a></p>
+	<?php endif; ?>
+
 	</div>
 
 	<?php if ( !empty($input_id) ) : ?>
@@ -555,6 +564,9 @@ case 'login' :
 default:
 	$secure_cookie = '';
 	$interim_login = isset($_REQUEST['interim-login']);
+	$customize_login = isset( $_REQUEST['customize-login'] );
+	if ( $customize_login )
+		wp_enqueue_script( 'customize-base' );
 
 	// If the user wants ssl but the session is not ssl, force a secure cookie.
 	if ( !empty($_POST['log']) && !force_ssl_admin() ) {
@@ -592,10 +604,18 @@ default:
 		if ( $interim_login ) {
 			$message = '<p class="message">' . __('You have logged in successfully.') . '</p>';
 			login_header( '', $message ); ?>
+
+			<?php if ( ! $customize_login ) : ?>
 			<script type="text/javascript">setTimeout( function(){window.close()}, 8000);</script>
 			<p class="alignright">
 			<input type="button" class="button-primary" value="<?php esc_attr_e('Close'); ?>" onclick="window.close()" /></p>
-			</div></body></html>
+			<?php endif; ?>
+			</div>
+			<?php do_action( 'login_footer' ); ?>
+			<?php if ( $customize_login ) : ?>
+				<script type="text/javascript">setTimeout( function(){ new wp.customize.Messenger({ url: '<?php echo wp_customize_url(); ?>', channel: 'login' }).send('login') }, 1000 );</script>
+			<?php endif; ?>
+			</body></html>
 <?php		exit;
 		}
 
@@ -634,6 +654,8 @@ default:
 		$errors->add('registered', __('Registration complete. Please check your e-mail.'), 'message');
 	elseif	( $interim_login )
 		$errors->add('expired', __('Your session has expired. Please log-in again.'), 'message');
+	elseif ( strpos( $redirect_to, 'about.php?updated' ) )
+		$errors->add('updated', __( '<strong>You have successfully updated WordPress!</strong> Please log back in to experience the awesomeness.' ), 'message' );
 
 	// Clear any stale cookies.
 	if ( $reauth )
@@ -664,6 +686,9 @@ default:
 <?php	} else { ?>
 		<input type="hidden" name="redirect_to" value="<?php echo esc_attr($redirect_to); ?>" />
 <?php 	} ?>
+<?php   if ( $customize_login ) : ?>
+		<input type="hidden" name="customize-login" value="1" />
+<?php   endif; ?>
 		<input type="hidden" name="testcookie" value="1" />
 	</p>
 </form>

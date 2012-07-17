@@ -5,7 +5,15 @@
  */
 jQuery( function($) {
 	$('#availablethemes').on( 'click', '.theme-detail', function (event) {
-		$(this).parents('.action-links').siblings('.themedetaildiv').toggle();
+		var theme   = $(this).closest('.available-theme'),
+			details = theme.find('.themedetaildiv');
+
+		if ( ! details.length ) {
+			details = theme.find('.install-theme-info .theme-details');
+			details = details.clone().addClass('themedetaildiv').appendTo( theme ).hide();
+		}
+
+		details.toggle();
 		event.preventDefault();
 	});
 });
@@ -16,6 +24,9 @@ jQuery( function($) {
  * Displays theme previews on theme install pages.
  */
 jQuery( function($) {
+	if( ! window.postMessage )
+		return;
+
 	var preview = $('#theme-installer'),
 		info    = preview.find('.install-theme-info'),
 		panel   = preview.find('.wp-full-overlay-main'),
@@ -30,14 +41,14 @@ jQuery( function($) {
 	});
 
 	preview.on( 'click', '.collapse-sidebar', function( event ) {
-		preview.toggleClass('collapsed');
+		preview.toggleClass( 'collapsed' ).toggleClass( 'expanded' );
 		event.preventDefault();
 	});
 
-	$('#availablethemes').on( 'click', '.installable-theme', function( event ) {
+	$('#availablethemes').on( 'click', '.install-theme-preview', function( event ) {
 		var src;
 
-		info.html( $(this).find('.install-theme-info').html() );
+		info.html( $(this).closest('.installable-theme').find('.install-theme-info').html() );
 		src = info.find( '.theme-preview-url' ).val();
 		panel.html( '<iframe src="' + src + '" />');
 		preview.fadeIn( 200, function() {

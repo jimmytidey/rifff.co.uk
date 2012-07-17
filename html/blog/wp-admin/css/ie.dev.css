@@ -286,8 +286,7 @@ form#template div {
 	width: 100%;
 }
 
-#ed_toolbar input,
-#ed_reply_toolbar input {
+.wp-editor-container .quicktags-toolbar input {
 	overflow: visible;
 	padding: 0 4px;
 }
@@ -429,6 +428,23 @@ table.ie-fixed {
 
 .about-wrap .feature-section.three-col img {
 	margin-left: 0;
+}
+
+.available-theme {
+	display: inline;
+}
+
+.available-theme ul {
+	margin: 0;
+}
+
+.about-wrap .three-col-images img {
+	margin: 0 0.6% 10px;
+}
+
+.about-wrap .three-col-images .last-feature,
+.about-wrap .three-col-images .first-feature {
+	float: none;
 }
 
 /* IE6 leftovers */

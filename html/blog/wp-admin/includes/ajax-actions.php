@@ -212,28 +212,8 @@ function wp_ajax_dashboard_widgets() {
 	wp_die();
 }
 
-function wp_ajax_autocomplete_site() {
-	if ( ! is_multisite() || ! current_user_can( 'manage_sites' ) || wp_is_large_network( 'sites' ) )
-		wp_die( -1 );
-
-	$return = array();
-
-	global $wpdb;
-	$like_escaped_term = '%' . like_escape( stripslashes( $_REQUEST['term'] ) ) . '%';
-	$sites = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, domain, path FROM $wpdb->blogs WHERE ( domain LIKE %s OR path LIKE %s ) AND public = '1' AND archived = '0' AND mature = '0' AND spam = '0' AND deleted = '0' ORDER BY registered DESC", $like_escaped_term, $like_escaped_term ), ARRAY_A );
-
-	if ( empty( $sites ) )
-		wp_die( -1 );
-
-	foreach ( (array) $sites as $details ) {
-		$blogname = get_blog_option( $details['blog_id'], 'blogname' );
-		$return[] = array(
-			'label' => sprintf( '%1$s (%2$s)', $blogname, $details['domain'] . $details['path'] ),
-			'value' => $details['domain']
-		);
-	}
-
-	wp_die( json_encode( $return ) );
+function wp_ajax_logged_in() {
+	wp_die( 1 );
 }
 
 /*
@@ -303,7 +283,8 @@ function _wp_ajax_delete_comment_response( $comment_id, $delta = -1 ) {
  * POST-based Ajax handlers.
  */
 
-function _wp_ajax_add_hierarchical_term( $action ) {
+function _wp_ajax_add_hierarchical_term() {
+	$action = $_POST['action'];
 	$taxonomy = get_taxonomy(substr($action, 4));
 	check_ajax_referer( $action, '_ajax_nonce-add-' . $taxonomy->name );
 	if ( !current_user_can( $taxonomy->cap->edit_terms ) )
@@ -476,6 +457,8 @@ function wp_ajax_delete_meta() {
 }
 
 function wp_ajax_delete_post( $action ) {
+	if ( empty( $action ) )
+		$action = 'delete-post';
 	$id = isset( $_POST['id'] ) ? (int) $_POST['id'] : 0;
 
 	check_ajax_referer( "{$action}_$id" );
@@ -492,6 +475,8 @@ function wp_ajax_delete_post( $action ) {
 }
 
 function wp_ajax_trash_post( $action ) {
+	if ( empty( $action ) )
+		$action = 'trash-post';
 	$id = isset( $_POST['id'] ) ? (int) $_POST['id'] : 0;
 
 	check_ajax_referer( "{$action}_$id" );
@@ -513,10 +498,14 @@ function wp_ajax_trash_post( $action ) {
 }
 
 function wp_ajax_untrash_post( $action ) {
+	if ( empty( $action ) )
+		$action = 'untrash-post';
 	wp_ajax_trash_post( $action );
 }
 
 function wp_ajax_delete_page( $action ) {
+	if ( empty( $action ) )
+		$action = 'delete-page';
 	$id = isset( $_POST['id'] ) ? (int) $_POST['id'] : 0;
 
 	check_ajax_referer( "{$action}_$id" );
@@ -570,6 +559,8 @@ function wp_ajax_dim_comment() {
 }
 
 function wp_ajax_add_link_category( $action ) {
+	if ( empty( $action ) )
+		$action = 'add-link-category';
 	check_ajax_referer( $action );
 	if ( !current_user_can( 'manage_categories' ) )
 		wp_die( -1 );
@@ -690,6 +681,8 @@ function wp_ajax_get_tagcloud() {
 
 function wp_ajax_get_comments( $action ) {
 	global $wp_list_table, $post_id;
+	if ( empty( $action ) )
+		$action = 'get-comments';
 
 	check_ajax_referer( $action );
 
@@ -725,6 +718,8 @@ function wp_ajax_get_comments( $action ) {
 
 function wp_ajax_replyto_comment( $action ) {
 	global $wp_list_table, $wpdb;
+	if ( empty( $action ) )
+		$action = 'replyto-comment';
 
 	check_ajax_referer( $action, '_ajax_nonce-replyto-comment' );
 
@@ -1008,6 +1003,8 @@ function wp_ajax_add_meta() {
 
 function wp_ajax_add_user( $action ) {
 	global $wp_list_table;
+	if ( empty( $action ) )
+		$action = 'add-user';
 
 	check_ajax_referer( $action );
 	if ( ! current_user_can('create_users') )
@@ -1621,6 +1618,14 @@ function wp_ajax_upload_attachment() {
 			),
 		) );
 		wp_die();
+	}
+
+	if ( isset( $post_data['context'] ) && isset( $post_data['theme'] ) ) {
+		if ( 'custom-background' === $post_data['context'] )
+			update_post_meta( $attachment_id, '_wp_attachment_is_custom_background', $post_data['theme'] );
+
+		if ( 'custom-header' === $post_data['context'] )
+			update_post_meta( $attachment_id, '_wp_attachment_is_custom_header', $post_data['theme'] );
 	}
 
 	$post = get_post( $attachment_id );

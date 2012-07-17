@@ -652,7 +652,7 @@ function get_users( $args = array() ) {
  *
  * @param int $user_id User ID
  * @param bool $all Whether to retrieve all blogs, or only blogs that are not marked as deleted, archived, or spam.
- * @return array A list of the user's blogs. False if the user was not found or an empty array if the user has no blogs.
+ * @return array A list of the user's blogs. An empty array if the user doesn't exist or belongs to no blogs.
  */
 function get_blogs_of_user( $user_id, $all = false ) {
 	global $wpdb;
@@ -661,11 +661,11 @@ function get_blogs_of_user( $user_id, $all = false ) {
 
 	// Logged out users can't have blogs
 	if ( empty( $user_id ) )
-		return false;
+		return array();
 
 	$keys = get_user_meta( $user_id );
 	if ( empty( $keys ) )
-		return false;
+		return array();
 
 	if ( ! is_multisite() ) {
 		$blog_id = get_current_blog_id();
@@ -745,10 +745,7 @@ function is_user_member_of_blog( $user_id = 0, $blog_id = 0 ) {
 		$blog_id = get_current_blog_id();
 
 	$blogs = get_blogs_of_user( $user_id );
-	if ( is_array( $blogs ) )
-		return array_key_exists( $blog_id, $blogs );
-	else
-		return false;
+	return array_key_exists( $blog_id, $blogs );
 }
 
 /**
@@ -888,14 +885,14 @@ function count_users($strategy = 'time') {
 		$users_of_blog = $wpdb->get_col( "SELECT meta_value FROM $wpdb->usermeta WHERE meta_key = '{$blog_prefix}capabilities'" );
 
 		foreach ( $users_of_blog as $caps_meta ) {
-			$b_roles = unserialize($caps_meta);
-			if ( is_array($b_roles) ) {
-				foreach ( $b_roles as $b_role => $val ) {
-					if ( isset($avail_roles[$b_role]) ) {
-						$avail_roles[$b_role]++;
-					} else {
-						$avail_roles[$b_role] = 1;
-					}
+			$b_roles = maybe_unserialize($caps_meta);
+			if ( ! is_array( $b_roles ) )
+				continue;
+			foreach ( $b_roles as $b_role => $val ) {
+				if ( isset($avail_roles[$b_role]) ) {
+					$avail_roles[$b_role]++;
+				} else {
+					$avail_roles[$b_role] = 1;
 				}
 			}
 		}

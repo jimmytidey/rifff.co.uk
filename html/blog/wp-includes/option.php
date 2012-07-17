@@ -48,7 +48,7 @@ function get_option( $option, $default = false ) {
 		// prevent non-existent options from triggering multiple queries
 		$notoptions = wp_cache_get( 'notoptions', 'options' );
 		if ( isset( $notoptions[$option] ) )
-			return $default;
+			return apply_filters( 'default_option_' . $option, $default );
 
 		$alloptions = wp_load_alloptions();
 
@@ -67,7 +67,7 @@ function get_option( $option, $default = false ) {
 				} else { // option does not exist, so we must cache its non-existence
 					$notoptions[$option] = true;
 					wp_cache_set( 'notoptions', $notoptions, 'options' );
-					return $default;
+					return apply_filters( 'default_option_' . $option, $default );
 				}
 			}
 		}
@@ -78,7 +78,7 @@ function get_option( $option, $default = false ) {
 		if ( is_object( $row ) )
 			$value = $row->option_value;
 		else
-			return $default;
+			return apply_filters( 'default_option_' . $option, $default );
 	}
 
 	// If home is not set use siteurl.
@@ -754,7 +754,8 @@ function get_site_option( $option, $default = false, $use_cache = true ) {
  	if ( false !== $pre )
  		return $pre;
 
-	if ( !is_multisite() ) {
+	if ( ! is_multisite() ) {
+		$default = apply_filters( 'default_site_option_' . $option, $default );
 		$value = get_option($option, $default);
 	} else {
 		$cache_key = "{$wpdb->siteid}:$option";
@@ -770,7 +771,7 @@ function get_site_option( $option, $default = false, $use_cache = true ) {
 				$value = maybe_unserialize( $value );
 				wp_cache_set( $cache_key, $value, 'site-options' );
 			} else {
-				$value = $default;
+				$value = apply_filters( 'default_site_option_' . $option, $default );
 			}
 		}
 	}

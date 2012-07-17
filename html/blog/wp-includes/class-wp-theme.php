@@ -290,7 +290,7 @@ final class WP_Theme implements ArrayAccess {
 	 *
 	 * @return string Theme name, ready for display (translated)
 	 */
-	function __toString() {
+	public function __toString() {
 		return (string) $this->display('Name');
 	}
 
@@ -317,7 +317,7 @@ final class WP_Theme implements ArrayAccess {
 			case 'version' :
 				return $this->get('Version');
 			case 'parent_theme' :
-				return $this->parent ? $this->parent->get('Name') : '';
+				return $this->parent() ? $this->parent()->get('Name') : '';
 			case 'template_dir' :
 				return $this->get_template_directory();
 			case 'stylesheet_dir' :
@@ -369,20 +369,22 @@ final class WP_Theme implements ArrayAccess {
 	}
 
 	/**
-	 * Method to implement ArrayAccess for keys formerly returned by get_themes()
+	 * Method to implement ArrayAccess for keys formerly returned by get_themes().
+	 *
+	 * Author, Author Name, Author URI, and Description did not previously return
+	 * translated data. We are doing so now as it is safe to do. However, as
+	 * Name and Title could have been used as the key for get_themes(), both remain
+	 * untranslated for back compatibility. This means that ['Name'] is not ideal,
+	 * and care should be taken to use $theme->display('Name') to get a properly
+	 * translated header.
 	 */
 	public function offsetGet( $offset ) {
 		switch ( $offset ) {
 			case 'Name' :
-			case 'Version' :
-			case 'Status' :
-				return $this->get( $offset );
 			case 'Title' :
+				// See note above about using translated data. get() is not ideal.
+				// It is only for backwards compatibility. Use display().
 				return $this->get('Name');
-			// Author, Author Name, Author URI, and Description did not
-			// previously return translated data. We are doing so now.
-			// Title and Name could have been used as the key for get_themes(),
-			// so both to remain untranslated for back compatibility.
 			case 'Author' :
 				return $this->display( 'Author');
 			case 'Author Name' :
@@ -391,20 +393,17 @@ final class WP_Theme implements ArrayAccess {
 				return $this->display('AuthorURI');
 			case 'Description' :
 				return $this->display( 'Description');
+			case 'Version' :
+			case 'Status' :
+				return $this->get( $offset );
 			case 'Template' :
 				return $this->get_template();
 			case 'Stylesheet' :
 				return $this->get_stylesheet();
 			case 'Template Files' :
-				$files = $this->get_files( 'php' );
-				if ( $this->parent() )
-					$files = array_merge( $this->parent()->get_files( 'php' ), $files );
-				return $files;
+				return $this->get_files( 'php', 1, true );
 			case 'Stylesheet Files' :
-				$files = $this->get_files( 'css' );
-				if ( $this->parent() )
-					$files = array_merge( $this->parent()->get_files( 'css' ), $files );
-				return $files;
+				return $this->get_files( 'css', 0, false );
 			case 'Template Dir' :
 				return $this->get_template_directory();
 			case 'Stylesheet Dir' :
@@ -418,7 +417,7 @@ final class WP_Theme implements ArrayAccess {
 			case 'Theme Root URI' :
 				return $this->get_theme_root_uri();
 			case 'Parent Theme' :
-				return $this->parent ? $this->parent->get('Name') : '';
+				return $this->parent() ? $this->parent()->get('Name') : '';
 			default :
 				return null;
 		}
@@ -440,7 +439,7 @@ final class WP_Theme implements ArrayAccess {
 	 * Whether the theme exists.
 	 *
 	 * A theme with errors exists. A theme with the error of 'theme_not_found',
-	 * meaning that the theme directory was not found, does not exist.
+	 * meaning that the theme's directory was not found, does not exist.
 	 *
 	 * @since 3.4.0
 	 * @access public
@@ -448,7 +447,7 @@ final class WP_Theme implements ArrayAccess {
 	 * @return bool Whether the theme exists.
 	 */
 	public function exists() {
-		return ! ( is_wp_error( $this->errors ) && in_array( 'theme_not_found', $this->errors->get_error_codes() ) );
+		return ! ( $this->errors() && in_array( 'theme_not_found', $this->errors()->get_error_codes() ) );
 	}
 
 	/**
@@ -471,7 +470,7 @@ final class WP_Theme implements ArrayAccess {
 	 * @access private
 	 * @since 3.4.0
 	 *
-	 * @param string $key Type of data to store (theme, screenshot, screenshot_count, files, headers)
+	 * @param string $key Type of data to store (theme, screenshot, headers, page_templates)
 	 * @param string $data Data to store
 	 * @return bool Return value from wp_cache_add()
 	 */
@@ -487,7 +486,7 @@ final class WP_Theme implements ArrayAccess {
 	 * @access private
 	 * @since 3.4.0
 	 *
-	 * @param string $key Type of data to retrieve (theme, screenshot, screenshot_count, files, headers)
+	 * @param string $key Type of data to retrieve (theme, screenshot, headers, page_templates)
 	 * @return mixed Retrieved data
 	 */
 	private function cache_get( $key ) {
@@ -501,7 +500,7 @@ final class WP_Theme implements ArrayAccess {
 	 * @since 3.4.0
 	 */
 	public function cache_delete() {
-		foreach ( array( 'theme', 'screenshot', 'screenshot_count', 'files', 'headers', 'page_templates' ) as $key )
+		foreach ( array( 'theme', 'screenshot', 'headers', 'page_templates' ) as $key )
 			wp_cache_delete( $key . '-' . $this->cache_hash, 'themes' );
 		$this->template = $this->textdomain_loaded = $this->theme_root_uri = $this->parent = $this->errors = $this->headers_sanitized = $this->name_translated = null;
 		$this->headers = array();
@@ -509,14 +508,20 @@ final class WP_Theme implements ArrayAccess {
 	}
 
 	/**
-	 * Gets a theme header.
+	 * Get a raw, unformatted theme header.
 	 *
-	 * The header is sanitized.
+	 * The header is sanitized, but is not translated, and is not marked up for display.
+	 * To get a theme header for display, use the display() method.
+	 *
+	 * Use the get_template() method, not the 'Template' header, for finding the template.
+	 * The 'Template' header is only good for what was written in the style.css, while
+	 * get_template() takes into account where WordPress actually located the theme and
+	 * whether it is actually valid.
 	 *
 	 * @access public
 	 * @since 3.4.0
 	 *
-	 * @param string $header Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status.
+	 * @param string $header Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status, Tags.
 	 * @return string String on success, false on failure.
 	 */
 	public function get( $header ) {
@@ -545,12 +550,12 @@ final class WP_Theme implements ArrayAccess {
 	}
 
 	/**
-	 * Gets a theme header ready for display (marked up, translated).
+	 * Gets a theme header, formatted and translated for display.
 	 *
 	 * @access public
 	 * @since 3.4.0
 	 *
-	 * @param string $header Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status.
+	 * @param string $header Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status, Tags.
 	 * @param bool $markup Optional. Whether to mark up the header. Defaults to true.
 	 * @param bool $translate Optional. Whether to translate the header. Defaults to true.
 	 * @return string Processed header, false on failure.
@@ -558,7 +563,7 @@ final class WP_Theme implements ArrayAccess {
 	public function display( $header, $markup = true, $translate = true ) {
 		$value = $this->get( $header );
 
-		if ( empty( $value ) || ! $this->load_textdomain() )
+		if ( $translate && ( empty( $value ) || ! $this->load_textdomain() ) )
 			$translate = false;
 
 		if ( $translate )
@@ -573,7 +578,7 @@ final class WP_Theme implements ArrayAccess {
 	/**
 	 * Sanitize a theme header.
 	 *
-	 * @param string $header Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status.
+	 * @param string $header Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status, Tags.
 	 * @param string $value Value to sanitize.
 	 */
 	private function sanitize_header( $header, $value ) {
@@ -625,7 +630,7 @@ final class WP_Theme implements ArrayAccess {
 	 * @access private
 	 * @since 3.4.0
 	 *
-	 * @param string $header Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status.
+	 * @param string $header Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status, Tags.
 	 * @param string $value Value to mark up.
 	 * @param string $translate Whether the header has been translated.
 	 * @return string Value, marked up.
@@ -672,7 +677,7 @@ final class WP_Theme implements ArrayAccess {
 	 * @access private
 	 * @since 3.4.0
 	 *
-	 * @param string $header Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status.
+	 * @param string $header Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status, Tags.
 	 * @param string $value Value to translate.
 	 * @return string Translated value.
 	 */
@@ -685,7 +690,7 @@ final class WP_Theme implements ArrayAccess {
 				$this->name_translated = translate( $value, $this->get('TextDomain' ) );
 				return $this->name_translated;
 			case 'Tags' :
-				if ( empty( $value ) )
+				if ( empty( $value ) || ! function_exists( 'get_theme_feature_list' ) )
 					return $value;
 
 				static $tags_list;
@@ -740,18 +745,6 @@ final class WP_Theme implements ArrayAccess {
 	}
 
 	/**
-	 * Whether a theme is a child theme.
-	 *
-	 * @since 3.4.0
-	 * @access public
-	 *
-	 * @return bool True if a theme is a child theme, false otherwise.
-	 */
-	public function is_child_theme() {
-		return $this->template !== $this->stylesheet;
-	}
-
-	/**
 	 * Returns the absolute path to the directory of a theme's "stylesheet" files.
 	 *
 	 * In the case of a child theme, this is the absolute path to the directory
@@ -763,7 +756,7 @@ final class WP_Theme implements ArrayAccess {
 	 * @return string Absolute path of the stylesheet directory.
 	 */
 	public function get_stylesheet_directory() {
-		if ( $this->errors && in_array( 'theme_root_missing', $this->errors->get_error_codes() ) )
+		if ( $this->errors() && in_array( 'theme_root_missing', $this->errors()->get_error_codes() ) )
 			return '';
 
 		return $this->theme_root . '/' . $this->stylesheet;
@@ -781,8 +774,8 @@ final class WP_Theme implements ArrayAccess {
 	 * @return string Absolute path of the template directory.
 	 */
 	public function get_template_directory() {
-		if ( $this->parent )
-			$theme_root = $this->parent->theme_root;
+		if ( $this->parent() )
+			$theme_root = $this->parent()->theme_root;
 		else
 			$theme_root = $this->theme_root;
 
@@ -816,8 +809,8 @@ final class WP_Theme implements ArrayAccess {
 	 * @return string URL to the template directory.
 	 */
 	public function get_template_directory_uri() {
-		if ( $this->parent )
-			$theme_root_uri = $this->parent->get_theme_root_uri();
+		if ( $this->parent() )
+			$theme_root_uri = $this->parent()->get_theme_root_uri();
 		else
 			$theme_root_uri = $this->get_theme_root_uri();
 
@@ -863,8 +856,8 @@ final class WP_Theme implements ArrayAccess {
 	 *
 	 * The main screenshot is called screenshot.png. gif and jpg extensions are also allowed.
 	 *
-	 * Screenshots for a theme must be in the stylesheet directory. (In the case of a child
-	 * theme, a parent theme's screenshots are inherited.)
+	 * Screenshots for a theme must be in the stylesheet directory. (In the case of child
+	 * themes, parent theme screenshots are not inherited.)
 	 *
 	 * @since 3.4.0
 	 * @access public
@@ -892,93 +885,28 @@ final class WP_Theme implements ArrayAccess {
 		}
 
 		$this->cache_add( 'screenshot', 0 );
-		$this->cache_add( 'screenshot_count', 0 );
 		return false;
 	}
 
 	/**
-	 * Returns the number of screenshots for a theme.
-	 *
-	 * The first screenshot may be called screenshot.png, .gif, or .jpg. Subsequent
-	 * screenshots can be screenshot-2.png, screenshot-3.png, etc. The count must
-	 * be consecutive for screenshots to be counted, and all screenshots beyond the
-	 * initial one must be image/png files.
-	 *
-	 * @see WP_Theme::get_screenshot()
-	 * @since 3.4.0
-	 * @access public
-	 *
-	 * @return int Number of screenshots. Can be 0.
-	 */
-	public function get_screenshot_count() {
-		$screenshot_count = $this->cache_get( 'screenshot_count' );
-		if ( is_numeric( $screenshot_count ) )
-			return $screenshot_count;
-
-		// This will set the screenshot cache.
-		// If there is no screenshot, the screenshot_count cache will also be set.
-		if ( ! $screenshot = $this->get_screenshot( 'relative' ) )
-			return 0;
-
-		$prefix = $this->get_stylesheet() . '/screenshot-';
-		$files = self::scandir( $this->get_stylesheet_directory(), $this->get_stylesheet(), 'png' );
-
-		$screenshot_count = 1;
-		while ( in_array( $prefix . ( $screenshot_count + 1 ) . '.png', $files['png'] ) )
-			$screenshot_count++;
-
-		$this->cache_add( 'screenshot_count', $screenshot_count );
-		return $screenshot_count;
-	}
-
-	/**
-	 * Returns an array of screenshot filenames.
-	 *
-	 * @see WP_Theme::get_screenshot()
-	 * @see WP_Theme::get_screenshot_count()
-	 * @since 3.4.0
-	 * @access public
-	 *
-	 * @param string $uri Type of URL to return, either 'relative' or an absolute URI. Defaults to absolute URI.
-	 * @return array Screenshots. Empty array if no screenshors are found.
-	 */
-	public function get_screenshots( $uri = 'uri' ) {
-		if ( ! $count = $this->get_screenshot_count() )
-			return array();
-
-		$pre = 'relative' == $uri ? '' : $this->get_stylesheet_directory_uri() . '/';
-
-		$screenshots = array( $pre . $this->get_screenshot( 'relative' ) );
-		for ( $i = 2; $i <= $count; $i++ )
-			$screenshots[] = $pre . 'screenshot-' . $i . '.png';
-		return $screenshots;
-	}
-
-	/**
-	 * Return files in the theme's directory. Does not return files found in the parent theme.
+	 * Return files in the theme's directory.
 	 *
 	 * @since 3.4.0
 	 * @access public
 	 *
-	 * @param string|null $type Optional. Type of files to return, either 'php' or 'css'. Defaults to null, for both.
-	 * @return array If a specific $type is requested, returns an array of PHP files. If no $type is requested,
-	 * 	returns an array, with the keys being the file types, and the values being an array of files for those type.
+	 * @param mixed $type Optional. Array of extensions to return. Defaults to all files (null).
+	 * @param int $depth Optional. How deep to search for files. Defaults to a flat scan (0 depth). -1 depth is infinite.
+	 * @param bool $search_parent Optional. Whether to return parent files. Defaults to false.
+	 * @return array Array of files, keyed by the path to the file relative to the theme's directory, with the values
+	 * 	being absolute paths.
 	 */
-	public function get_files( $type ) {
-		$files = $this->cache_get( 'files' );
-		if ( ! is_array( $files ) ) {
-			$files = (array) self::scandir( $this->get_stylesheet_directory(), array( 'php', 'css' ), 1 );
-			foreach ( $files as &$group )
-				ksort( $group );
-			$this->cache_add( 'files', $files );
-		}
+	public function get_files( $type = null, $depth = 0, $search_parent = false ) {
+		$files = (array) self::scandir( $this->get_stylesheet_directory(), $type, $depth );
 
-		if ( null === $type )
-			return $files;
-		elseif ( isset( $files[ $type ] ) )
-			return $files[ $type ];
+		if ( $search_parent && $this->parent() )
+			$files += (array) self::scandir( $this->get_template_directory(), $type, $depth );
 
-		return array();
+		return $files;
 	}
 
 	/**
@@ -999,13 +927,12 @@ final class WP_Theme implements ArrayAccess {
 		if ( ! is_array( $page_templates ) ) {
 			$page_templates = array();
 
-			$files = (array) self::scandir( $this->get_stylesheet_directory(), 'php', 1 );
+			$files = (array) $this->get_files( 'php', 1 );
 
-			foreach ( $files['php'] as $file => $full_path ) {
-				$headers = get_file_data( $full_path, array( 'Template Name' => 'Template Name' ) );
-				if ( empty( $headers['Template Name'] ) )
+			foreach ( $files as $file => $full_path ) {
+				if ( ! preg_match( '|Template Name:(.*)$|mi', file_get_contents( $full_path ), $header ) )
 					continue;
-				$page_templates[ $file ] = $headers['Template Name'];
+				$page_templates[ $file ] = _cleanup_header_comment( $header[1] );
 			}
 
 			$this->cache_add( 'page_templates', $page_templates );
@@ -1030,24 +957,26 @@ final class WP_Theme implements ArrayAccess {
 	 * @access private
 	 *
 	 * @param string $path Absolute path to search.
-	 * @param array|string $extensions Array of extensions to find, or string of a single extension
+	 * @param mixed  Array of extensions to find, string of a single extension, or null for all extensions.
 	 * @param int $depth How deep to search for files. Optional, defaults to a flat scan (0 depth). -1 depth is infinite.
 	 * @param string $relative_path The basename of the absolute path. Used to control the returned path
 	 * 	for the found files, particularly when this function recurses to lower depths.
 	 */
-	private static function scandir( $path, $extensions, $depth = 0, $relative_path = '' ) {
+	private static function scandir( $path, $extensions = null, $depth = 0, $relative_path = '' ) {
 		if ( ! is_dir( $path ) )
 			return false;
 
-		$results = scandir( $path );
-
-		$extensions = (array) $extensions;
-		$files = array_fill_keys( $extensions, array() );
-		$_extensions = implode( '|', $extensions );
+		if ( $extensions ) {
+			$extensions = (array) $extensions;
+			$_extensions = implode( '|', $extensions );
+		}
 
 		$relative_path = trailingslashit( $relative_path );
 		if ( '/' == $relative_path )
 			$relative_path = '';
+
+		$results = scandir( $path );
+		$files = array();
 
 		foreach ( $results as $result ) {
 			if ( '.' == $result[0] )
@@ -1057,8 +986,8 @@ final class WP_Theme implements ArrayAccess {
 					continue;
 				$found = self::scandir( $path . '/' . $result, $extensions, $depth - 1 , $relative_path . $result );
 				$files = array_merge_recursive( $files, $found );
-			} elseif ( preg_match( '~\.(' . $_extensions . ')$~', $result, $match ) ) {
-				$files[ $match[1] ][ $relative_path . $result ] = $path . '/' . $result;
+			} elseif ( ! $extensions || preg_match( '~\.(' . $_extensions . ')$~', $result ) ) {
+				$files[ $relative_path . $result ] = $path . '/' . $result;
 			}
 		}
 
@@ -1095,6 +1024,8 @@ final class WP_Theme implements ArrayAccess {
 		$path = $this->get_stylesheet_directory();
 		if ( $domainpath = $this->get('DomainPath') )
 			$path .= $domainpath;
+		else
+			$path .= '/languages';
 
 		$this->textdomain_loaded = load_theme_textdomain( $textdomain, $path );
 		return $this->textdomain_loaded;

@@ -190,6 +190,7 @@ add_filter( 'the_posts',                '_close_comments_for_old_posts', 10, 2);
 add_filter( 'comments_open',            '_close_comments_for_old_post', 10, 2 );
 add_filter( 'pings_open',               '_close_comments_for_old_post', 10, 2 );
 add_filter( 'editable_slug',            'urldecode'                           );
+add_filter( 'editable_slug',            'esc_textarea'                        );
 add_filter( 'nav_menu_meta_box_object', '_wp_nav_menu_meta_box_object'        );
 
 // Actions
@@ -228,7 +229,7 @@ foreach ( array( 'rss2_head', 'commentsrss2_head', 'rss_head', 'rdf_header', 'at
 
 // WP Cron
 if ( !defined( 'DOING_CRON' ) )
-	add_action( 'sanitize_comment_cookies', 'wp_cron' );
+	add_action( 'init', 'wp_cron' );
 
 // 2 Actions 2 Furious
 add_action( 'do_feed_rdf',                'do_feed_rdf',                             10, 1 );

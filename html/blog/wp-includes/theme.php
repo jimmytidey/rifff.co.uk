@@ -98,7 +98,7 @@ function wp_get_theme( $stylesheet = null, $theme_root = null ) {
 	if ( empty( $theme_root ) ) {
 		$theme_root = get_raw_theme_root( $stylesheet );
 		if ( false === $theme_root )
-			$theme_root = WP_CONTENT_DIR . $theme_root;
+			$theme_root = WP_CONTENT_DIR . '/themes';
 		elseif ( ! in_array( $theme_root, (array) $wp_theme_directories ) )
 			$theme_root = WP_CONTENT_DIR . $theme_root;
 	}
@@ -381,7 +381,7 @@ function search_theme_directories( $force = false ) {
 				if ( ! $sub_dirs )
 					return false;
 				foreach ( $sub_dirs as $sub_dir ) {
-					if ( ! is_dir( $theme_root . '/' . $dir ) || $dir[0] == '.' || $dir == 'CVS' )
+					if ( ! is_dir( $theme_root . '/' . $dir . '/' . $sub_dir ) || $dir[0] == '.' || $dir == 'CVS' )
 						continue;
 					if ( ! file_exists( $theme_root . '/' . $dir . '/' . $sub_dir . '/style.css' ) )
 						continue;
@@ -850,7 +850,7 @@ function display_header_text() {
 		return false;
 
 	$text_color = get_theme_mod( 'header_textcolor', get_theme_support( 'custom-header', 'default-text-color' ) );
-	return $text_color && 'blank' != $text_color;
+	return 'blank' != $text_color;
 }
 
 /**
@@ -1102,8 +1102,13 @@ function background_color() {
  * @access protected
  */
 function _custom_background_cb() {
+	// $background is the saved custom image, or the default image.
 	$background = get_background_image();
-	$color = get_background_color();
+
+	// $color is the saved custom color.
+	// A default has to be specified in style.css. It will not be printed here.
+	$color = get_theme_mod( 'background_color' );
+
 	if ( ! $background && ! $color )
 		return;
 
@@ -1130,7 +1135,7 @@ function _custom_background_cb() {
 		$style .= $image . $repeat . $position . $attachment;
 	}
 ?>
-<style type="text/css">
+<style type="text/css" id="custom-background-css">
 body.custom-background { <?php echo trim( $style ); ?> }
 </style>
 <?php
@@ -1501,7 +1506,8 @@ function current_theme_supports( $feature ) {
 			break;
 
 		case 'custom-header':
-			// specific custom header capabilities can be registered by passing
+		case 'custom-background' :
+			// specific custom header and background capabilities can be registered by passing
 			// an array to add_theme_support()
 			$header_support = $args[0];
 			return ( isset( $_wp_theme_features[$feature][0][$header_support] ) && $_wp_theme_features[$feature][0][$header_support] );
@@ -1566,42 +1572,105 @@ function check_theme_switched() {
 }
 
 /**
- * Includes and instantiates the WP_Customize class.
+ * Includes and instantiates the WP_Customize_Manager class.
  *
- * Fires when ?customize=on.
+ * Fires when ?wp_customize=on or on wp-admin/customize.php.
  *
  * @since 3.4.0
  */
 function _wp_customize_include() {
-	// Load on themes.php or ?customize=on
-	if ( ! ( isset( $_REQUEST['customize'] ) && 'on' == $_REQUEST['customize'] ) )
+	if ( ! ( ( isset( $_REQUEST['wp_customize'] ) && 'on' == $_REQUEST['wp_customize'] )
+		|| ( is_admin() && 'customize.php' == basename( $_SERVER['PHP_SELF'] ) )
+	) )
 		return;
 
-	require( ABSPATH . WPINC . '/class-wp-customize.php' );
+	require( ABSPATH . WPINC . '/class-wp-customize-manager.php' );
 	// Init Customize class
-	// @todo Dependency injection instead
-	$GLOBALS['customize'] = new WP_Customize;
+	$GLOBALS['wp_customize'] = new WP_Customize_Manager;
 }
 add_action( 'plugins_loaded', '_wp_customize_include' );
 
 /**
- * Localizes the customize-loader script.
+ * Adds settings for the customize-loader script.
  *
  * @since 3.4.0
  */
-function _wp_customize_loader_localize() {
-	wp_localize_script( 'customize-loader', 'wpCustomizeLoaderL10n', array(
-		'back' => sprintf( __( '&larr; Return to %s' ), get_admin_page_title() ),
-		'url'  => admin_url( 'admin.php' ),
-	) );
+function _wp_customize_loader_settings() {
+	global $wp_scripts;
+
+	$admin_origin = parse_url( admin_url() );
+	$home_origin  = parse_url( home_url() );
+	$cross_domain = ( strtolower( $admin_origin[ 'host' ] ) != strtolower( $home_origin[ 'host' ] ) );
+
+	$browser = array(
+		'mobile' => wp_is_mobile(),
+		'ios'    => wp_is_mobile() && preg_match( '/iPad|iPod|iPhone/', $_SERVER['HTTP_USER_AGENT'] ),
+	);
+
+	$settings = array(
+		'url'           => esc_url( admin_url( 'customize.php' ) ),
+		'isCrossDomain' => $cross_domain,
+		'browser'       => $browser,
+	);
+
+	$script = 'var _wpCustomizeLoaderSettings = ' . json_encode( $settings ) . ';';
+
+	$data = $wp_scripts->get_data( 'customize-loader', 'data' );
+	if ( $data )
+		$script = "$data\n$script";
+
+	$wp_scripts->add_data( 'customize-loader', 'data', $script );
 }
-add_action( 'admin_enqueue_scripts', '_wp_customize_loader_localize' );
+add_action( 'admin_enqueue_scripts', '_wp_customize_loader_settings' );
 
 /**
  * Returns a URL to load the theme customizer.
  *
  * @since 3.4.0
+ *
+ * @param string $stylesheet Optional. Theme to customize. Defaults to current theme.
  */
-function wp_customize_url( $stylesheet ) {
-	return esc_url( admin_url( 'admin.php' ) . '?customize=on&theme=' . $stylesheet );
+function wp_customize_url( $stylesheet = null ) {
+	$url = admin_url( 'customize.php' );
+	if ( $stylesheet )
+		$url .= '?theme=' . $stylesheet;
+	return esc_url( $url );
+}
+
+/**
+ * Prints a script to check whether or not the customizer is supported,
+ * and apply either the no-customize-support or customize-support class
+ * to the body.
+ *
+ * This function MUST be called inside the body tag.
+ *
+ * Ideally, call this function immediately after the body tag is opened.
+ * This prevents a flash of unstyled content.
+ *
+ * It is also recommended that you add the "no-customize-support" class
+ * to the body tag by default.
+ *
+ * @since 3.4.0
+ */
+function wp_customize_support_script() {
+	$admin_origin = parse_url( admin_url() );
+	$home_origin  = parse_url( home_url() );
+	$cross_domain = ( strtolower( $admin_origin[ 'host' ] ) != strtolower( $home_origin[ 'host' ] ) );
+
+	?>
+	<script type="text/javascript">
+		(function() {
+			var request, b = document.body, c = 'className', cs = 'customize-support', rcs = new RegExp('(^|\\s+)(no-)?'+cs+'(\\s+|$)');
+
+<?php		if ( $cross_domain ): ?>
+			request = (function(){ var xhr = new XMLHttpRequest(); return ('withCredentials' in xhr); })();
+<?php		else: ?>
+			request = true;
+<?php		endif; ?>
+
+			b[c] = b[c].replace( rcs, '' );
+			b[c] += ( window.postMessage && request ? ' ' : ' no-' ) + cs;
+		}());
+	</script>
+	<?php
 }

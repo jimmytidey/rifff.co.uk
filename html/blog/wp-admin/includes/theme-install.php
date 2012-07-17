@@ -49,19 +49,21 @@ function install_themes_feature_list( ) {
  *
  * @since 2.8.0
  */
-function install_theme_search_form() {
-	$type = isset( $_REQUEST['type'] ) ? stripslashes( $_REQUEST['type'] ) : '';
+function install_theme_search_form( $type_selector = true ) {
+	$type = isset( $_REQUEST['type'] ) ? stripslashes( $_REQUEST['type'] ) : 'term';
 	$term = isset( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : '';
+	if ( ! $type_selector )
+		echo '<p class="install-help">' . __( 'Search for themes by keyword.' ) . '</p>';
 	?>
-<p class="install-help"><?php _e('Search for themes by keyword, author, or tag.') ?></p>
-
 <form id="search-themes" method="get" action="">
 	<input type="hidden" name="tab" value="search" />
+	<?php if ( $type_selector ) : ?>
 	<select	name="type" id="typeselector">
 	<option value="term" <?php selected('term', $type) ?>><?php _e('Keyword'); ?></option>
 	<option value="author" <?php selected('author', $type) ?>><?php _e('Author'); ?></option>
 	<option value="tag" <?php selected('tag', $type) ?>><?php _ex('Tag', 'Theme Installer'); ?></option>
 	</select>
+	<?php endif; ?>
 	<input type="search" name="s" size="30" value="<?php echo esc_attr($term) ?>" />
 	<?php submit_button( __( 'Search' ), 'button', 'search', false ); ?>
 </form>
@@ -74,10 +76,10 @@ function install_theme_search_form() {
  * @since 2.8.0
  */
 function install_themes_dashboard() {
-	install_theme_search_form();
+	install_theme_search_form( false );
 ?>
 <h4><?php _e('Feature Filter') ?></h4>
-<p class="install-help"><?php _e('Find a theme based on specific features') ?></p>
+<p class="install-help"><?php _e( 'Find a theme based on specific features.' ); ?></p>
 
 <form method="get" action="">
 	<input type="hidden" name="tab" value="search" />
@@ -166,6 +168,9 @@ function install_theme_information() {
 	if ( is_wp_error( $theme ) )
 		wp_die( $theme );
 
+	iframe_header( __('Theme Install') );
 	$wp_list_table->theme_installer_single( $theme );
+	iframe_footer();
+	exit;
 }
 add_action('install_themes_pre_theme-information', 'install_theme_information');

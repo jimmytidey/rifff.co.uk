@@ -11,8 +11,11 @@ class WP_Customize_Control {
 	public $manager;
 	public $id;
 
+	// All settings tied to the control.
 	public $settings;
-	public $setting;
+
+	// The primary setting for the control (if there is one).
+	public $setting = 'default';
 
 	public $priority          = 10;
 	public $section           = '';
@@ -64,14 +67,7 @@ class WP_Customize_Control {
 	 *
 	 * @since 3.4.0
 	 */
-	public function enqueue() {
-		switch( $this->type ) {
-			case 'color':
-				wp_enqueue_script( 'farbtastic' );
-				wp_enqueue_style( 'farbtastic' );
-				break;
-		}
-	}
+	public function enqueue() {}
 
 
 	/**
@@ -176,27 +172,11 @@ class WP_Customize_Control {
 				</label>
 				<?php
 				break;
-			case 'color':
-				?>
-				<label>
-					<span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
-					<div class="dropdown color-picker-toggle">
-						<div class="dropdown-content color-picker-spot"></div>
-						<div class="dropdown-arrow"></div>
-					</div>
-					<div class="color-picker-control color-picker-hex">
-						<span>#</span>
-						<input type="text" <?php $this->link(); ?> />
-					</div>
-					<div class="color-picker-control farbtastic-placeholder"></div>
-				</label>
-				<?php
-				break;
 			case 'checkbox':
 				?>
 				<label>
-					<span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
-					<input type="checkbox" value="<?php echo esc_attr( $this->value() ); ?>" <?php $this->link(); checked( $this->value() ); ?> class="customize-control-content" />
+					<input type="checkbox" value="<?php echo esc_attr( $this->value() ); ?>" <?php $this->link(); checked( $this->value() ); ?> />
+					<?php echo esc_html( $this->label ); ?>
 				</label>
 				<?php
 				break;
@@ -225,7 +205,7 @@ class WP_Customize_Control {
 				?>
 				<label>
 					<span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
-					<select <?php $this->link(); ?> class="customize-control-content">
+					<select <?php $this->link(); ?>>
 						<?php
 						foreach ( $this->choices as $value => $label )
 							echo '<option value="' . esc_attr( $value ) . '"' . selected( $this->value(), $value, false ) . '>' . $label . '</option>';
@@ -255,6 +235,44 @@ class WP_Customize_Control {
 				);
 				break;
 		}
+	}
+}
+
+class WP_Customize_Color_Control extends WP_Customize_Control {
+	public $type = 'color';
+	public $statuses;
+
+	public function __construct( $manager, $id, $args = array() ) {
+		$this->statuses = array( '' => __('Default') );
+		parent::__construct( $manager, $id, $args );
+	}
+
+	public function enqueue() {
+		wp_enqueue_script( 'farbtastic' );
+		wp_enqueue_style( 'farbtastic' );
+	}
+
+	public function to_json() {
+		parent::to_json();
+		$this->json['statuses'] = $this->statuses;
+	}
+
+	public function render_content() {
+		?>
+		<label>
+			<span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
+			<div class="customize-control-content">
+				<div class="dropdown">
+					<div class="dropdown-content">
+						<div class="dropdown-status"></div>
+					</div>
+					<div class="dropdown-arrow"></div>
+				</div>
+				<input class="color-picker-hex" type="text" maxlength="7" placeholder="<?php esc_attr_e('Hex Value'); ?>" />
+			</div>
+			<div class="farbtastic-placeholder"></div>
+		</label>
+		<?php
 	}
 }
 
@@ -292,14 +310,22 @@ class WP_Customize_Upload_Control extends WP_Customize_Control {
 class WP_Customize_Image_Control extends WP_Customize_Upload_Control {
 	public $type = 'image';
 	public $get_url;
+	public $statuses;
 
 	protected $tabs = array();
 
 	public function __construct( $manager, $id, $args ) {
+		$this->statuses = array( '' => __('No Image') );
+
 		parent::__construct( $manager, $id, $args );
 
 		$this->add_tab( 'upload-new', __('Upload New'), array( $this, 'tab_upload_new' ) );
 		$this->add_tab( 'uploaded',   __('Uploaded'),   array( $this, 'tab_uploaded' ) );
+	}
+
+	public function to_json() {
+		parent::to_json();
+		$this->json['statuses'] = $this->statuses;
 	}
 
 	public function render_content() {
@@ -308,19 +334,21 @@ class WP_Customize_Image_Control extends WP_Customize_Upload_Control {
 			$src = call_user_func( $this->get_url, $src );
 
 		?>
-		<label class="customize-image-picker">
+		<div class="customize-image-picker">
 			<span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
 
-
-			<div class="dropdown preview-thumbnail">
-				<div class="dropdown-content">
-					<?php if ( empty( $src ) ): ?>
-						<img style="display:none;" />
-					<?php else: ?>
-						<img src="<?php echo esc_url( $src ); ?>" />
-					<?php endif; ?>
+			<div class="customize-control-content">
+				<div class="dropdown preview-thumbnail">
+					<div class="dropdown-content">
+						<?php if ( empty( $src ) ): ?>
+							<img style="display:none;" />
+						<?php else: ?>
+							<img src="<?php echo esc_url( set_url_scheme( $src ) ); ?>" />
+						<?php endif; ?>
+						<div class="dropdown-status"></div>
+					</div>
+					<div class="dropdown-arrow"></div>
 				</div>
-				<div class="dropdown-arrow"></div>
 			</div>
 
 			<div class="library">
@@ -341,7 +369,7 @@ class WP_Customize_Image_Control extends WP_Customize_Upload_Control {
 			<div class="actions">
 				<a href="#" class="remove"><?php _e( 'Remove Image' ); ?></a>
 			</div>
-		</label>
+		</div>
 		<?php
 	}
 
@@ -357,11 +385,20 @@ class WP_Customize_Image_Control extends WP_Customize_Upload_Control {
 	}
 
 	public function tab_upload_new() {
-		?>
-		<div class="upload-dropzone">
-			<?php _e('Drop a file here or <a href="#" class="upload">select a file</a>.'); ?>
-		</div>
-		<?php
+		if ( ! _device_can_upload() ) {
+			?>
+			<p><?php _e('The web browser on your device cannot be used to upload files. You may be able to use the <a href="http://wordpress.org/extend/mobile/">native app for your device</a> instead.'); ?></p>
+			<?php
+		} else {
+			?>
+			<div class="upload-dropzone">
+				<?php _e('Drop a file here or <a href="#" class="upload">select a file</a>.'); ?>
+			</div>
+			<div class="upload-fallback">
+				<span class="button-secondary"><?php _e('Select File'); ?></span>
+			</div>
+			<?php
+		}
 	}
 
 	public function tab_uploaded() {
@@ -369,19 +406,95 @@ class WP_Customize_Image_Control extends WP_Customize_Upload_Control {
 		<div class="uploaded-target"></div>
 		<?php
 	}
+
+	public function print_tab_image( $url, $thumbnail_url = null ) {
+		$url = set_url_scheme( $url );
+		$thumbnail_url = ( $thumbnail_url ) ? set_url_scheme( $thumbnail_url ) : $url;
+		?>
+		<a href="#" class="thumbnail" data-customize-image-value="<?php echo esc_url( $url ); ?>">
+			<img src="<?php echo esc_url( $thumbnail_url ); ?>" />
+		</a>
+		<?php
+	}
+}
+
+class WP_Customize_Background_Image_Control extends WP_Customize_Image_Control {
+	public function __construct( $manager ) {
+		parent::__construct( $manager, 'background_image', array(
+			'label'    => __( 'Background Image' ),
+			'section'  => 'background_image',
+			'context'  => 'custom-background',
+			'get_url'  => 'get_background_image',
+		) );
+
+		if ( $this->setting->default )
+			$this->add_tab( 'default',  __('Default'),  array( $this, 'tab_default_background' ) );
+	}
+
+	public function tab_uploaded() {
+		$backgrounds = get_posts( array(
+			'post_type'  => 'attachment',
+			'meta_key'   => '_wp_attachment_is_custom_background',
+			'meta_value' => $this->manager->get_stylesheet(),
+			'orderby'    => 'none',
+			'nopaging'   => true,
+		) );
+
+		?><div class="uploaded-target"></div><?php
+
+		if ( empty( $backgrounds ) )
+			return;
+
+		foreach ( (array) $backgrounds as $background )
+			$this->print_tab_image( esc_url_raw( $background->guid ) );
+	}
+
+	public function tab_default_background() {
+		$this->print_tab_image( $this->setting->default );
+	}
 }
 
 class WP_Customize_Header_Image_Control extends WP_Customize_Image_Control {
 	public function __construct( $manager ) {
 		parent::__construct( $manager, 'header_image', array(
-			'label'   => __( 'Header Image' ),
-			'section' => 'header',
-			'context' => 'custom-header',
-			'removed' => 'remove-header',
-			'get_url' => 'get_header_image',
+			'label'    => __( 'Header Image' ),
+			'settings' => array(
+				'default' => 'header_image',
+				'data'    => 'header_image_data',
+			),
+			'section'  => 'header_image',
+			'context'  => 'custom-header',
+			'removed'  => 'remove-header',
+			'get_url'  => 'get_header_image',
+			'statuses' => array(
+				''                      => __('Default'),
+				'remove-header'         => __('No Image'),
+				'random-default-image'  => __('Random Default Image'),
+				'random-uploaded-image' => __('Random Uploaded Image'),
+			)
 		) );
 
 		$this->add_tab( 'default',  __('Default'),  array( $this, 'tab_default_headers' ) );
+	}
+
+	public function print_header_image( $choice, $header ) {
+		$header['url']           = set_url_scheme( $header['url'] );
+		$header['thumbnail_url'] = set_url_scheme( $header['thumbnail_url'] );
+
+		$header_image_data = array( 'choice' => $choice );
+		foreach ( array( 'attachment_id', 'width', 'height', 'url', 'thumbnail_url' ) as $key ) {
+			if ( isset( $header[ $key ] ) )
+				$header_image_data[ $key ] = $header[ $key ];
+		}
+
+
+		?>
+		<a href="#" class="thumbnail"
+			data-customize-image-value="<?php echo esc_url( $header['url'] ); ?>"
+			data-customize-header-image-data="<?php echo esc_attr( json_encode( $header_image_data ) ); ?>">
+			<img src="<?php echo esc_url( $header['thumbnail_url'] ); ?>" />
+		</a>
+		<?php
 	}
 
 	public function tab_uploaded() {
@@ -389,21 +502,15 @@ class WP_Customize_Header_Image_Control extends WP_Customize_Image_Control {
 
 		?><div class="uploaded-target"></div><?php
 
-		foreach ( $headers as $header ) : ?>
-			<a href="#" class="thumbnail" data-customize-image-value="<?php echo esc_url( $header['url'] ); ?>">
-				<img src="<?php echo esc_url( $header['thumbnail_url'] ); ?>" />
-			</a>
-		<?php endforeach;
+		foreach ( $headers as $choice => $header )
+			$this->print_header_image( $choice, $header );
 	}
 
 	public function tab_default_headers() {
 		global $custom_image_header;
 		$custom_image_header->process_default_headers();
 
-		foreach ( $custom_image_header->default_headers as $header ) : ?>
-			<a href="#" class="thumbnail" data-customize-image-value="<?php echo esc_url( $header['url'] ); ?>">
-				<img src="<?php echo esc_url( $header['thumbnail_url'] ); ?>" />
-			</a>
-		<?php endforeach;
+		foreach ( $custom_image_header->default_headers as $choice => $header )
+			$this->print_header_image( $choice, $header );
 	}
 }

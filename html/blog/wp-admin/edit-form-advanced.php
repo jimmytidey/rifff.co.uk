@@ -277,7 +277,7 @@ wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 
 <div id="poststuff">
 
-<div id="post-body" class="metabox-holder columns-<?php echo 1 == $screen_layout_columns ? '1' : '2'; ?>">
+<div id="post-body" class="metabox-holder columns-<?php echo 1 == get_current_screen()->get_columns() ? '1' : '2'; ?>">
 <div id="post-body-content">
 <?php if ( post_type_supports($post_type, 'title') ) { ?>
 <div id="titlediv">
@@ -333,11 +333,9 @@ wp_nonce_field( 'samplepermalink', 'samplepermalinknonce', false );
 </tr></tbody></table>
 
 </div>
+<?php } ?>
 </div><!-- /post-body-content -->
-<?php
-}
 
-?>
 <div id="postbox-container-1" class="postbox-container">
 <?php
 

@@ -34,7 +34,7 @@ function post_submit_meta_box($post) {
 <?php } ?>
 <img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-loading" id="draft-ajax-loading" alt="" />
 </div>
-
+<?php if ( $post_type_object->public ) : ?>
 <div id="preview-action">
 <?php
 if ( 'publish' == $post->post_status ) {
@@ -51,7 +51,7 @@ if ( 'publish' == $post->post_status ) {
 <a class="preview button" href="<?php echo $preview_link; ?>" target="wp-preview" id="post-preview" tabindex="4"><?php echo $preview_button; ?></a>
 <input type="hidden" name="wp-preview" id="wp-preview" value="" />
 </div>
-
+<?php endif; // public post type ?>
 <div class="clear"></div>
 </div><?php // /minor-publishing-actions ?>
 
@@ -356,7 +356,7 @@ function post_categories_meta_box( $post, $box ) {
 						<?php echo $tax->labels->parent_item_colon; ?>
 					</label>
 					<?php wp_dropdown_categories( array( 'taxonomy' => $taxonomy, 'hide_empty' => 0, 'name' => 'new'.$taxonomy.'_parent', 'orderby' => 'name', 'hierarchical' => 1, 'show_option_none' => '&mdash; ' . $tax->labels->parent_item . ' &mdash;', 'tab_index' => 3 ) ); ?>
-					<input type="button" id="<?php echo $taxonomy; ?>-add-submit" class="add:<?php echo $taxonomy ?>checklist:<?php echo $taxonomy ?>-add button category-add-sumbit" value="<?php echo esc_attr( $tax->labels->add_new_item ); ?>" tabindex="3" />
+					<input type="button" id="<?php echo $taxonomy; ?>-add-submit" class="add:<?php echo $taxonomy ?>checklist:<?php echo $taxonomy ?>-add button category-add-submit" value="<?php echo esc_attr( $tax->labels->add_new_item ); ?>" tabindex="3" />
 					<?php wp_nonce_field( 'add-'.$taxonomy, '_ajax_nonce-add-'.$taxonomy, false ); ?>
 					<span id="<?php echo $taxonomy; ?>-ajax-response"></span>
 				</p>
@@ -483,17 +483,17 @@ function post_comment_meta_box($post) {
 	if ( 1 > $total ) {
 		echo '<p id="no-comments">' . __('No comments yet.') . '</p>';
 	} else {
-		$hidden = get_hidden_meta_boxes('post');
+		$hidden = get_hidden_meta_boxes( get_current_screen() );
 		if ( ! in_array('commentsdiv', $hidden) ) {
 			?>
 			<script type="text/javascript">jQuery(document).ready(function(){commentsBox.get(<?php echo $total; ?>, 10);});</script>
 			<?php
 		}
-	}
 
-	?>
-	<p class="hide-if-no-js hidden" id="show-comments"><a href="#commentstatusdiv" onclick="commentsBox.get(<?php echo $total; ?>);return false;"><?php _e('Show comments'); ?></a> <img class="waiting" style="display:none;" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="" /></p>
-	<?php
+		?>
+		<p class="hide-if-no-js" id="show-comments"><a href="#commentstatusdiv" onclick="commentsBox.get(<?php echo $total; ?>);return false;"><?php _e('Show comments'); ?></a> <img class="waiting" style="display:none;" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="" /></p>
+		<?php
+	}
 
 	wp_comment_trashnotice();
 }
@@ -665,7 +665,7 @@ function link_categories_meta_box($link) {
 		<li class="tabs"><a href="#categories-all"><?php _e( 'All Categories' ); ?></a></li>
 		<li class="hide-if-no-js"><a href="#categories-pop"><?php _e( 'Most Used' ); ?></a></li>
 	</ul>
-	
+
 	<div id="categories-all" class="tabs-panel">
 		<ul id="categorychecklist" class="list:category categorychecklist form-no-clear">
 			<?php
@@ -676,13 +676,13 @@ function link_categories_meta_box($link) {
 			?>
 		</ul>
 	</div>
-	
+
 	<div id="categories-pop" class="tabs-panel" style="display: none;">
 		<ul id="categorychecklist-pop" class="categorychecklist form-no-clear">
 			<?php wp_popular_terms_checklist('link_category'); ?>
 		</ul>
 	</div>
-	
+
 	<div id="category-adder" class="wp-hidden-children">
 		<h4><a id="category-add-toggle" href="#category-add"><?php _e( '+ Add New Category' ); ?></a></h4>
 		<p id="link-category-add" class="wp-hidden-child">

@@ -32,7 +32,7 @@ get_current_screen()->add_help_tab( array(
 
 get_current_screen()->set_help_sidebar(
 	'<p><strong>' . __('For more information:') . '</strong></p>' .
-	'<p>' . __('<a href="http://codex.wordpress.org/Network_Admin_Sites_Screens" target="_blank">Documentation on Site Management</a>') . '</p>' .
+	'<p>' . __('<a href="http://codex.wordpress.org/Network_Admin_Sites_Screen" target="_blank">Documentation on Site Management</a>') . '</p>' .
 	'<p>' . __('<a href="http://wordpress.org/support/forum/multisite/" target="_blank">Support Forums</a>') . '</p>'
 );
 
@@ -172,7 +172,7 @@ $parent_file = 'sites.php';
 $submenu_file = 'sites.php';
 
 if ( ! wp_is_large_network( 'users' ) && apply_filters( 'show_network_site_users_add_existing_form', true ) )
-	wp_enqueue_script( 'user-search' );
+	wp_enqueue_script( 'user-suggest' );
 
 require('../admin-header.php'); ?>
 
@@ -267,7 +267,7 @@ endif; ?>
 	<table class="form-table">
 		<tr>
 			<th scope="row"><?php _e( 'Username' ); ?></th>
-			<td><input type="text" class="regular-text" name="newuser" id="newuser" /></td>
+			<td><input type="text" class="regular-text wp-suggest-user" name="newuser" id="newuser" /></td>
 		</tr>
 		<tr>
 			<th scope="row"><?php _e( 'Role'); ?></th>

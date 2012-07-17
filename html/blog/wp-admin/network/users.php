@@ -40,7 +40,7 @@ function confirm_delete_users( $users ) {
 				wp_die( sprintf( __( 'Warning! User %s cannot be deleted.' ), $delete_user->user_login ) );
 
 			if ( in_array( $delete_user->user_login, $site_admins ) )
-				wp_die( sprintf( __( 'Warning! User cannot be deleted. The user %s is a network admnistrator.' ), $delete_user->user_login ) );
+				wp_die( sprintf( __( 'Warning! User cannot be deleted. The user %s is a network administrator.' ), $delete_user->user_login ) );
 
 			echo "<input type='hidden' name='user[]' value='{$val}'/>\n";
 			$blogs = get_blogs_of_user( $val, true );
@@ -244,9 +244,6 @@ get_current_screen()->set_help_sidebar(
 	'<p>' . __('<a href="http://codex.wordpress.org/Network_Admin_Users_Screen" target="_blank">Documentation on Network Users</a>') . '</p>' .
 	'<p>' . __('<a href="http://wordpress.org/support/forum/multisite/" target="_blank">Support Forums</a>') . '</p>'
 );
-
-if ( ! wp_is_large_network( 'users' ) )
-	wp_enqueue_script( 'user-search' );
 
 require_once( '../admin-header.php' );
 

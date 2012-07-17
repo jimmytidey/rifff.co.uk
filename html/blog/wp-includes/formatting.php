@@ -715,7 +715,62 @@ function remove_accents($string) {
 		// Euro Sign
 		chr(226).chr(130).chr(172) => 'E',
 		// GBP (Pound) Sign
-		chr(194).chr(163) => '');
+		chr(194).chr(163) => '',
+		// Vowels with diacritic (Vietnamese)
+		// unmarked
+		chr(198).chr(160) => 'O', chr(198).chr(161) => 'o',
+		chr(198).chr(175) => 'U', chr(198).chr(176) => 'u',
+		// grave accent
+		chr(225).chr(186).chr(166) => 'A', chr(225).chr(186).chr(167) => 'a',
+		chr(225).chr(186).chr(176) => 'A', chr(225).chr(186).chr(177) => 'a',
+		chr(225).chr(187).chr(128) => 'E', chr(225).chr(187).chr(129) => 'e',
+		chr(225).chr(187).chr(146) => 'O', chr(225).chr(187).chr(147) => 'o',
+		chr(225).chr(187).chr(156) => 'O', chr(225).chr(187).chr(157) => 'o',
+		chr(225).chr(187).chr(170) => 'U', chr(225).chr(187).chr(171) => 'u',
+		chr(225).chr(187).chr(178) => 'Y', chr(225).chr(187).chr(179) => 'y',
+		// hook
+		chr(225).chr(186).chr(162) => 'A', chr(225).chr(186).chr(163) => 'a',
+		chr(225).chr(186).chr(168) => 'A', chr(225).chr(186).chr(169) => 'a',
+		chr(225).chr(186).chr(178) => 'A', chr(225).chr(186).chr(179) => 'a',
+		chr(225).chr(186).chr(186) => 'E', chr(225).chr(186).chr(187) => 'e',
+		chr(225).chr(187).chr(130) => 'E', chr(225).chr(187).chr(131) => 'e',
+		chr(225).chr(187).chr(136) => 'I', chr(225).chr(187).chr(137) => 'i',
+		chr(225).chr(187).chr(142) => 'O', chr(225).chr(187).chr(143) => 'o',
+		chr(225).chr(187).chr(148) => 'O', chr(225).chr(187).chr(149) => 'o',
+		chr(225).chr(187).chr(158) => 'O', chr(225).chr(187).chr(159) => 'o',
+		chr(225).chr(187).chr(166) => 'U', chr(225).chr(187).chr(167) => 'u',
+		chr(225).chr(187).chr(172) => 'U', chr(225).chr(187).chr(173) => 'u',
+		chr(225).chr(187).chr(182) => 'Y', chr(225).chr(187).chr(183) => 'y',
+		// tilde
+		chr(225).chr(186).chr(170) => 'A', chr(225).chr(186).chr(171) => 'a',
+		chr(225).chr(186).chr(180) => 'A', chr(225).chr(186).chr(181) => 'a',
+		chr(225).chr(186).chr(188) => 'E', chr(225).chr(186).chr(189) => 'e',
+		chr(225).chr(187).chr(132) => 'E', chr(225).chr(187).chr(133) => 'e',
+		chr(225).chr(187).chr(150) => 'O', chr(225).chr(187).chr(151) => 'o',
+		chr(225).chr(187).chr(160) => 'O', chr(225).chr(187).chr(161) => 'o',
+		chr(225).chr(187).chr(174) => 'U', chr(225).chr(187).chr(175) => 'u',
+		chr(225).chr(187).chr(184) => 'Y', chr(225).chr(187).chr(185) => 'y',
+		// acute accent
+		chr(225).chr(186).chr(164) => 'A', chr(225).chr(186).chr(165) => 'a',
+		chr(225).chr(186).chr(174) => 'A', chr(225).chr(186).chr(175) => 'a',
+		chr(225).chr(186).chr(190) => 'E', chr(225).chr(186).chr(191) => 'e',
+		chr(225).chr(187).chr(144) => 'O', chr(225).chr(187).chr(145) => 'o',
+		chr(225).chr(187).chr(154) => 'O', chr(225).chr(187).chr(155) => 'o',
+		chr(225).chr(187).chr(168) => 'U', chr(225).chr(187).chr(169) => 'u',
+		// dot below
+		chr(225).chr(186).chr(160) => 'A', chr(225).chr(186).chr(161) => 'a',
+		chr(225).chr(186).chr(172) => 'A', chr(225).chr(186).chr(173) => 'a',
+		chr(225).chr(186).chr(182) => 'A', chr(225).chr(186).chr(183) => 'a',
+		chr(225).chr(186).chr(184) => 'E', chr(225).chr(186).chr(185) => 'e',
+		chr(225).chr(187).chr(134) => 'E', chr(225).chr(187).chr(135) => 'e',
+		chr(225).chr(187).chr(138) => 'I', chr(225).chr(187).chr(139) => 'i',
+		chr(225).chr(187).chr(140) => 'O', chr(225).chr(187).chr(141) => 'o',
+		chr(225).chr(187).chr(152) => 'O', chr(225).chr(187).chr(153) => 'o',
+		chr(225).chr(187).chr(162) => 'O', chr(225).chr(187).chr(163) => 'o',
+		chr(225).chr(187).chr(164) => 'U', chr(225).chr(187).chr(165) => 'u',
+		chr(225).chr(187).chr(176) => 'U', chr(225).chr(187).chr(177) => 'u',
+		chr(225).chr(187).chr(180) => 'Y', chr(225).chr(187).chr(181) => 'y',
+		);
 
 		$string = strtr($string, $chars);
 	} else {
@@ -917,16 +972,24 @@ function sanitize_title_with_dashes($title, $raw_title = '', $context = 'display
 	$title = str_replace('.', '-', $title);
 
 	if ( 'save' == $context ) {
-		// nbsp, ndash and mdash
+		// Convert nbsp, ndash and mdash to hyphens
 		$title = str_replace( array( '%c2%a0', '%e2%80%93', '%e2%80%94' ), '-', $title );
-		// iexcl and iquest
-		$title = str_replace( array( '%c2%a1', '%c2%bf' ), '', $title );
-		// angle quotes
-		$title = str_replace( array( '%c2%ab', '%c2%bb', '%e2%80%b9', '%e2%80%ba' ), '', $title );
-		// curly quotes
-		$title = str_replace( array( '%e2%80%98', '%e2%80%99', '%e2%80%9c', '%e2%80%9d' ), '', $title );
-		// copy, reg, deg, hellip and trade
-		$title = str_replace( array( '%c2%a9', '%c2%ae', '%c2%b0', '%e2%80%a6', '%e2%84%a2' ), '', $title );
+
+		// Strip these characters entirely
+		$title = str_replace( array(
+			// iexcl and iquest
+			'%c2%a1', '%c2%bf',
+			// angle quotes
+			'%c2%ab', '%c2%bb', '%e2%80%b9', '%e2%80%ba',
+			// curly quotes
+			'%e2%80%98', '%e2%80%99', '%e2%80%9c', '%e2%80%9d',
+			'%e2%80%9a', '%e2%80%9b', '%e2%80%9e', '%e2%80%9f',
+			// copy, reg, deg, hellip and trade
+			'%c2%a9', '%c2%ae', '%c2%b0', '%e2%80%a6', '%e2%84%a2',
+		), '', $title );
+
+		// Convert times to x
+		$title = str_replace( '%c3%97', 'x', $title );
 	}
 
 	$title = preg_replace('/[^%a-z0-9 _-]/', '', $title);
@@ -1016,7 +1079,7 @@ function convert_chars($content, $deprecated = '') {
 	'&#139;' => '&#8249;',
 	'&#140;' => '&#338;',
 	'&#141;' => '',
-	'&#142;' => '&#382;',
+	'&#142;' => '&#381;',
 	'&#143;' => '',
 	'&#144;' => '',
 	'&#145;' => '&#8216;',
@@ -1032,7 +1095,7 @@ function convert_chars($content, $deprecated = '') {
 	'&#155;' => '&#8250;',
 	'&#156;' => '&#339;',
 	'&#157;' => '',
-	'&#158;' => '',
+	'&#158;' => '&#382;',
 	'&#159;' => '&#376;'
 	);
 
@@ -1339,8 +1402,6 @@ function stripslashes_deep($value) {
 /**
  * Navigates through an array and encodes the values to be used in a URL.
  *
- * Uses a callback to pass the value of the array back to the function as a
- * string.
  *
  * @since 2.2.0
  *
@@ -1350,6 +1411,18 @@ function stripslashes_deep($value) {
 function urlencode_deep($value) {
 	$value = is_array($value) ? array_map('urlencode_deep', $value) : urlencode($value);
 	return $value;
+}
+
+/**
+ * Navigates through an array and raw encodes the values to be used in a URL.
+ *
+ * @since 3.4.0
+ *
+ * @param array|string $value The array or string to be encoded.
+ * @return array|string $value The encoded array (or string from the callback).
+ */
+function rawurlencode_deep( $value ) {
+	return is_array( $value ) ? array_map( 'rawurlencode_deep', $value ) : rawurlencode( $value );
 }
 
 /**
@@ -2054,6 +2127,10 @@ function wp_trim_excerpt($text = '') {
 /**
  * Trims text to a certain number of words.
  *
+ * This function is localized. For languages that count 'words' by the individual
+ * character (such as East Asian languages), the $num_words argument will apply
+ * to the number of individual characters.
+ *
  * @since 3.3.0
  *
  * @param string $text Text to trim.
@@ -2066,13 +2143,23 @@ function wp_trim_words( $text, $num_words = 55, $more = null ) {
 		$more = __( '&hellip;' );
 	$original_text = $text;
 	$text = wp_strip_all_tags( $text );
-	$words_array = preg_split( "/[\n\r\t ]+/", $text, $num_words + 1, PREG_SPLIT_NO_EMPTY );
+	/* translators: If your word count is based on single characters (East Asian characters),
+	   enter 'characters'. Otherwise, enter 'words'. Do not translate into your own language. */
+	if ( 'characters' == _x( 'words', 'word count: words or characters?' ) && preg_match( '/^utf\-?8$/i', get_option( 'blog_charset' ) ) ) {
+		$text = trim( preg_replace( "/[\n\r\t ]+/", ' ', $text ), ' ' );
+		preg_match_all( '/./u', $text, $words_array );
+		$words_array = array_slice( $words_array[0], 0, $num_words + 1 );
+		$sep = '';
+	} else {
+		$words_array = preg_split( "/[\n\r\t ]+/", $text, $num_words + 1, PREG_SPLIT_NO_EMPTY );
+		$sep = ' ';
+	}
 	if ( count( $words_array ) > $num_words ) {
 		array_pop( $words_array );
-		$text = implode( ' ', $words_array );
+		$text = implode( $sep, $words_array );
 		$text = $text . $more;
 	} else {
-		$text = implode( ' ', $words_array );
+		$text = implode( $sep, $words_array );
 	}
 	return apply_filters( 'wp_trim_words', $text, $num_words, $more, $original_text );
 }
@@ -3049,7 +3136,7 @@ function wp_strip_all_tags($string, $remove_breaks = false) {
 	if ( $remove_breaks )
 		$string = preg_replace('/[\r\n\t ]+/', ' ', $string);
 
-	return trim($string);
+	return trim( $string );
 }
 
 /**

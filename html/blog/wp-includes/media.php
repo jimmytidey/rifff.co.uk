@@ -327,6 +327,8 @@ function wp_constrain_dimensions( $current_width, $current_height, $max_width=0,
  * portion of the image will be cropped out and resized to the required size.
  *
  * @since 2.5.0
+ * @uses apply_filters() Calls 'image_resize_dimensions' on $orig_w, $orig_h, $dest_w, $dest_h and
+ *		$crop to provide custom resize dimensions.
  *
  * @param int $orig_w Original width.
  * @param int $orig_h Original height.
@@ -342,6 +344,11 @@ function image_resize_dimensions($orig_w, $orig_h, $dest_w, $dest_h, $crop = fal
 	// at least one of dest_w or dest_h must be specific
 	if ($dest_w <= 0 && $dest_h <= 0)
 		return false;
+
+	// plugins can use this to provide custom resize dimensions
+	$output = apply_filters( 'image_resize_dimensions', null, $orig_w, $orig_h, $dest_w, $dest_h, $crop );
+	if ( null !== $output )
+		return $output;
 
 	if ( $crop ) {
 		// crop the largest possible portion of the original image that we can size to $dest_w x $dest_h
@@ -455,7 +462,8 @@ function image_resize( $file, $max_w, $max_h, $crop = false, $suffix = null, $de
 			return new WP_Error('resize_path_invalid', __( 'Resize path invalid' ));
 	} else {
 		// all other formats are converted to jpg
-		$destfilename = "{$dir}/{$name}-{$suffix}.jpg";
+		if ( 'jpg' != $ext && 'jpeg' != $ext )
+			$destfilename = "{$dir}/{$name}-{$suffix}.jpg";
 		if ( !imagejpeg( $newimage, $destfilename, apply_filters( 'jpeg_quality', $jpeg_quality, 'image_resize' ) ) )
 			return new WP_Error('resize_path_invalid', __( 'Resize path invalid' ));
 	}
@@ -724,6 +732,13 @@ add_shortcode('caption', 'img_caption_shortcode');
  * @return string
  */
 function img_caption_shortcode($attr, $content = null) {
+	// New-style shortcode with the caption inside the shortcode with the link and image tags.
+	if ( ! isset( $attr['caption'] ) ) {
+		if ( preg_match( '#((?:<a [^>]+>\s*)?<img [^>]+>(?:\s*</a>)?)(.*)#is', $content, $matches ) ) {
+			$content = $matches[1];
+			$attr['caption'] = trim( $matches[2] );
+		}
+	}
 
 	// Allow plugins/themes to override the default caption template.
 	$output = apply_filters('img_caption_shortcode', '', $attr, $content);
@@ -1452,7 +1467,7 @@ function wp_plupload_default_settings() {
 
 	$max_upload_size = wp_max_upload_size();
 
-	$settings = array(
+	$defaults = array(
 		'runtimes'            => 'html5,silverlight,flash,html4',
 		'file_data_name'      => 'async-upload', // key passed to $_FILE.
 		'multiple_queues'     => true,
@@ -1465,7 +1480,7 @@ function wp_plupload_default_settings() {
 		'urlstream_upload'    => true,
 	);
 
-	$settings = apply_filters( 'plupload_default_settings', $settings );
+	$defaults = apply_filters( 'plupload_default_settings', $defaults );
 
 	$params = array(
 		'action' => 'upload-attachment',
@@ -1473,9 +1488,17 @@ function wp_plupload_default_settings() {
 
 	$params = apply_filters( 'plupload_default_params', $params );
 	$params['_wpnonce'] = wp_create_nonce( 'media-form' );
-	$settings['multipart_params'] = $params;
+	$defaults['multipart_params'] = $params;
 
-	$script = 'var wpPluploadDefaults = ' . json_encode( $settings ) . ';';
+	$settings = array(
+		'defaults' => $defaults,
+		'browser'  => array(
+			'mobile'    => wp_is_mobile(),
+			'supported' => _device_can_upload(),
+		),
+	);
+
+	$script = 'var _wpPluploadSettings = ' . json_encode( $settings ) . ';';
 
 	$data = $wp_scripts->get_data( 'wp-plupload', 'data' );
 	if ( $data )

@@ -179,7 +179,7 @@ if ( $allowed_files ) :
 		if ( 'style.css' == $filename )
 			echo "\t</ul>\n\t<h3>" . _x( 'Styles', 'Theme stylesheets in theme editor' ) . "</h3>\n\t<ul>\n";
 
-		$file_description = get_file_description( $filename );
+		$file_description = get_file_description( $absolute_filename );
 		if ( $file_description != basename( $filename ) )
 			$file_description .= '<br /><span class="nonessential">(' . $filename . ')</span>';
 
@@ -213,7 +213,7 @@ else : ?>
 	<?php endif; ?>
 
 		<div>
-		<?php if ( is_child_theme() && ! $theme->is_child_theme() && $theme->get_template() == get_template() ) : ?>
+		<?php if ( is_child_theme() && $theme->get_stylesheet() == get_template() ) : ?>
 			<p><?php if ( is_writeable( $file ) ) { ?><strong><?php _e( 'Caution:' ); ?></strong><?php } ?>
 			<?php _e( 'This is a file in your current parent theme.' ); ?></p>
 		<?php endif; ?>

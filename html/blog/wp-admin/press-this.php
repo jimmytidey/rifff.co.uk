@@ -435,7 +435,11 @@ var photostorage = false;
 	});
 </script>
 </head>
-<body class="press-this wp-admin<?php if ( is_rtl() ) echo ' rtl'; ?>">
+<?php
+$admin_body_class = ( is_rtl() ) ? 'rtl' : '';
+$admin_body_class .= ' locale-' . sanitize_html_class( strtolower( str_replace( '_', '-', get_locale() ) ) );
+?>
+<body class="press-this wp-admin <?php echo $admin_body_class; ?>">
 <form action="press-this.php?action=post" method="post">
 <div id="poststuff" class="metabox-holder">
 	<div id="side-sortables" class="press-this-sidebar">
@@ -524,7 +528,7 @@ var photostorage = false;
 									<?php echo $tax->labels->parent_item_colon; ?>
 								</label>
 								<?php wp_dropdown_categories( array( 'taxonomy' => 'category', 'hide_empty' => 0, 'name' => 'newcategory_parent', 'orderby' => 'name', 'hierarchical' => 1, 'show_option_none' => '&mdash; ' . $tax->labels->parent_item . ' &mdash;', 'tab_index' => 3 ) ); ?>
-								<input type="button" id="category-add-submit" class="add:categorychecklist:category-add button category-add-sumbit" value="<?php echo esc_attr( $tax->labels->add_new_item ); ?>" tabindex="3" />
+								<input type="button" id="category-add-submit" class="add:categorychecklist:category-add button category-add-submit" value="<?php echo esc_attr( $tax->labels->add_new_item ); ?>" tabindex="3" />
 								<?php wp_nonce_field( 'add-category', '_ajax_nonce-add-category', false ); ?>
 								<span id="category-ajax-response"></span>
 							</p>

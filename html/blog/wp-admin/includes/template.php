@@ -96,6 +96,8 @@ function wp_terms_checklist($post_id = 0, $args = array()) {
 		'taxonomy' => 'category',
 		'checked_ontop' => true
 	);
+	$args = apply_filters( 'wp_terms_checklist_args', $args, $post_id );
+
 	extract( wp_parse_args($args, $defaults), EXTR_SKIP );
 
 	if ( empty($walker) || !is_a($walker, 'Walker') )
@@ -1670,13 +1672,14 @@ function get_submit_button( $text = null, $type = 'primary', $name = 'submit', $
 }
 
 function _wp_admin_html_begin() {
+	$admin_html_class = ( is_admin_bar_showing() ) ? 'wp-toolbar' : '';
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]>
-<html xmlns="http://www.w3.org/1999/xhtml" class="ie8" <?php do_action('admin_xml_ns'); ?> <?php language_attributes(); ?>>
+<html xmlns="http://www.w3.org/1999/xhtml" class="ie8 <?php echo $admin_html_class; ?>" <?php do_action('admin_xml_ns'); ?> <?php language_attributes(); ?>>
 <![endif]-->
 <!--[if !(IE 8) ]><!-->
-<html xmlns="http://www.w3.org/1999/xhtml" <?php do_action('admin_xml_ns'); ?> <?php language_attributes(); ?>>
+<html xmlns="http://www.w3.org/1999/xhtml" class="<?php echo $admin_html_class; ?>" <?php do_action('admin_xml_ns'); ?> <?php language_attributes(); ?>>
 <!--<![endif]-->
 <head>
 <meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php echo get_option('blog_charset'); ?>" />
@@ -1705,36 +1708,43 @@ final class WP_Internal_Pointers {
 			'index.php'    => 'wp330_toolbar',
 			'post-new.php' => 'wp330_media_uploader',
 			'post.php'     => 'wp330_media_uploader',
-			'themes.php'   => 'wp330_saving_widgets',
+			'themes.php'   => array( 'wp330_saving_widgets', 'wp340_customize_current_theme_link' ),
+			'appearance_page_custom-header' => 'wp340_choose_image_from_library',
+			'appearance_page_custom-background' => 'wp340_choose_image_from_library',
 		);
 
 		// Check if screen related pointer is registered
 		if ( empty( $registered_pointers[ $hook_suffix ] ) )
 			return;
 
-		$pointer = $registered_pointers[ $hook_suffix ];
+		$pointers = (array) $registered_pointers[ $hook_suffix ];
 
 		$caps_required = array(
 			'wp330_media_uploader' => array( 'upload_files' ),
 			'wp330_saving_widgets' => array( 'edit_theme_options', 'switch_themes' ),
+			'wp340_customize_current_theme_link' => array( 'edit_theme_options' ),
+			'wp340_choose_image_from_library' => array( 'edit_theme_options' ),
 		);
-
-		if ( isset( $caps_required[ $pointer ] ) ) {
-			foreach ( $caps_required[ $pointer ] as $cap ) {
-				if ( ! current_user_can( $cap ) )
-					return;
-			}
-		}
 
 		// Get dismissed pointers
 		$dismissed = explode( ',', (string) get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
 
-		// Pointer has been dismissed
-		if ( in_array( $pointer, $dismissed ) )
-			return;
+		$got_pointers = false;
+		foreach ( array_diff( $pointers, $dismissed ) as $pointer ) {
+			if ( isset( $caps_required[ $pointer ] ) ) {
+				foreach ( $caps_required[ $pointer ] as $cap ) {
+					if ( ! current_user_can( $cap ) )
+						continue 2;
+				}
+			}
 
-		// Bind pointer print function
-		add_action( 'admin_print_footer_scripts', array( 'WP_Internal_Pointers', 'pointer_' . $pointer ) );
+			// Bind pointer print function
+			add_action( 'admin_print_footer_scripts', array( 'WP_Internal_Pointers', 'pointer_' . $pointer ) );
+			$got_pointers = true;
+		}
+
+		if ( ! $got_pointers )
+			return;
 
 		// Add pointers script and style to queue
 		wp_enqueue_style( 'wp-pointer' );
@@ -1757,8 +1767,8 @@ final class WP_Internal_Pointers {
 		?>
 		<script type="text/javascript">
 		//<![CDATA[
-		jQuery(document).ready( function($) {
-			var options = <?php echo json_encode( $args ); ?>;
+		(function($){
+			var options = <?php echo json_encode( $args ); ?>, setup;
 
 			if ( ! options )
 				return;
@@ -1772,8 +1782,16 @@ final class WP_Internal_Pointers {
 				}
 			});
 
-			$('<?php echo $selector; ?>').pointer( options ).pointer('open');
-		});
+			setup = function() {
+				$('<?php echo $selector; ?>').pointer( options ).pointer('open');
+			};
+
+			if ( options.position && options.position.defer_loading )
+				$(window).bind( 'load.wp-pointers', setup );
+			else
+				$(document).ready( setup );
+
+		})( jQuery );
 		//]]>
 		</script>
 		<?php
@@ -1823,12 +1841,43 @@ final class WP_Internal_Pointers {
 	}
 
 	/**
+	 * Print 'New Feature: Current Theme Customize Link' for 3.4.0.
+	 *
+	 * @since 3.4.0
+	 */
+	public static function pointer_wp340_customize_current_theme_link() {
+		$content  = '<h3>' . __( 'New Feature: Customizer' ) . '</h3>';
+		$content .= '<p>' . __( 'Click Customize to change the header, background, title and menus of the current theme, all in one place.' ) . '</p>';
+		$content .= '<p>' . __( 'Click the Live Preview links in the Available Themes list below to customize and preview another theme before activating it.' ) . '</p>';
+
+		WP_Internal_Pointers::print_js( 'wp340_customize_current_theme_link', '#customize-current-theme-link', array(
+			'content'  => $content,
+			'position' => array( 'edge' => 'top', 'align' => is_rtl() ? 'right' : 'left', 'offset' => is_rtl() ? '32 0' : '-32 0' ),
+		) );
+	}
+
+	/**
+	 * Print 'New Feature: Choose Image from Library' for 3.4.0.
+	 *
+	 * @since 3.4.0
+	 */
+	public static function pointer_wp340_choose_image_from_library() {
+		$content  = '<h3>' . __( 'New Feature: Choose Image from Library' ) . '</h3>';
+		$content .= '<p>' . __( 'Want to use an image you uploaded earlier? Select it from your media library instead of uploading it again.' ) . '</p>';
+
+		WP_Internal_Pointers::print_js( 'wp340_choose_image_from_library', '#choose-from-library-link', array(
+			'content'  => $content,
+			'position' => array( 'edge' => 'top', 'align' => is_rtl() ? 'right' : 'left', 'defer_loading' => true ),
+		) );
+	}
+
+	/**
 	 * Prevents new users from seeing existing 'new feature' pointers.
 	 *
 	 * @since 3.3.0
 	 */
 	public static function dismiss_pointers_for_new_users( $user_id ) {
-		add_user_meta( $user_id, 'dismissed_wp_pointers', 'wp330_toolbar,wp330_media_uploader,wp330_saving_widgets' );
+		add_user_meta( $user_id, 'dismissed_wp_pointers', 'wp330_toolbar,wp330_media_uploader,wp330_saving_widgets,wp340_choose_image_from_library,wp340_customize_current_theme_link' );
 	}
 }
 
