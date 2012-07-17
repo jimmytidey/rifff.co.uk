@@ -9,7 +9,7 @@ $query          = "SELECT * FROM users WHERE email = '$email'";
 
 $result        = mysql_query($query);  
 if (!empty($result)) { 
-    $unique_email = mysql_fetch_array($result);
+    $unique_email = mysql_fetch_array($result   );
 }
 
 $query = "SELECT * FROM users WHERE user_name = '$user_name'"; 
@@ -58,6 +58,7 @@ if (!empty($result)) {
             		$output = shell_exec("cp -r composer/projects/tom composer/projects/$folder_name");
                     echo "$output";
                     echo "<a href='composer/index.php'>Get Composing!</a>";
+                    $_SESSION['user_name'] = $user_name;
             	}                
                 
                 
