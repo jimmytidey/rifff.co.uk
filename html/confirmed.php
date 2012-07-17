@@ -2,15 +2,24 @@
 
 include("db_connect.php"); 
 
-$email = $_POST['email'];
-$user_name = $_POST['user_name'];
-$password = md5($_POST['password']); 
-$query = "SELECT * FROM users WHERE email = '$email'"; 
-$unique_email = mysql_fetch_array(mysql_query($query));
+$email          = $_POST['email'];
+$user_name      = $_POST['user_name'];
+$password       = md5($_POST['password']); 
+$query          = "SELECT * FROM users WHERE email = '$email'";
+
+$result        = mysql_query($query);  
+if (!empty($result)) { 
+    $unique_email = mysql_fetch_array();
+}
 
 $query = "SELECT * FROM users WHERE user_name = '$user_name'"; 
-$unique_user_name = mysql_fetch_array(mysql_query($query));
- 
+
+$result = mysql_query($query); 
+if (!empty($result)) { 
+    $unique_user_name = mysql_fetch_array($result);
+}
+
+
 ?>
 <!DOCTYPE html>
 <html>

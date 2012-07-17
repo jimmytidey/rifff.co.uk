@@ -3,3 +3,4 @@ html/composer/projects/
 html/composer/projects/*
 audio/*
 audio
+db_connect.php
