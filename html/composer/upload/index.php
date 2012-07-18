@@ -1,8 +1,4 @@
-<?
-session_start();
-
-
-?>
+<? session_start(); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
@@ -21,7 +17,7 @@ session_start();
 		var settings = {
 			flash_url : "Flash/swfupload.swf",
 			upload_url: "upload.php",
-			post_params: {"project_name" : "<?=$_GET['project_name'] ?>", "user_id" : "<?=$_SESSION['user_id'] ?>" },
+			post_params: {"project_name" : "<?=$_GET['project_name'] ?>", "user_id" : "<? echo $_SESSION['user_name'] ?>" },
 			file_size_limit : "100 MB",
 			file_types : "*.*",
 			file_types_description : "All Files",

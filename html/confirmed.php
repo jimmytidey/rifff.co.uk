@@ -9,7 +9,7 @@ $query          = "SELECT * FROM users WHERE email = '$email'";
 
 $result        = mysql_query($query);  
 if (!empty($result)) { 
-    $unique_email = mysql_fetch_array($result   );
+    $unique_email = mysql_fetch_array($result);
 }
 
 $query = "SELECT * FROM users WHERE user_name = '$user_name'"; 

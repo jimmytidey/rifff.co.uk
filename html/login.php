@@ -7,6 +7,7 @@ if (isset($_POST['email'])) {
     $email = $_POST['email'];
     $password = md5($_POST['password']); 
     $query = "SELECT * FROM users WHERE email = '$email' && password = '$password'"; 
+      
     $sucess = mysql_fetch_array(mysql_query($query));
     
     if (is_array($sucess)) { 
