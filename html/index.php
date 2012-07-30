@@ -29,15 +29,12 @@
 				<ul>
 				    <li>An embeddable widget for websites</li>
 				    <li>A native phone app</li>
-				    <li>A physical player built on Raspberry Pi</li>
+				    <li>A physical player built on Raspberry Pi -- our ultimate goal!</li>
 				</ul>
 				
-				<p><strong>Screencast explaining using the composter</strong></p>
-				<iframe width="500" height="375" src="http://www.youtube.com/embed/PFkOzDkools" frameborder="0" allowfullscreen></iframe>
-				
-                
-				
-				<p>Have a listen to a few test compositions below. Beware - they take a while to load.</p>
+				<h3>Embeddable Widget</h3>
+							
+				<p>Have a listen to a few test compositions using the embeddable widget. Beware - they take a while to load.</p>
 				
 				<ul>
 				    <li><a href='public_play.php?project_name=Reckoner'>Radiohead - Reckoner (looong download)</a></li>
@@ -51,9 +48,11 @@
 				
 				<h3>Online composition tool</h3> 
 				
-				<p style='text-align:center'>
-				    <img src='resources/composer.png' />
-				</p>				
+				
+				<p>Screencast explaining the composer</p>
+				<iframe width="500" height="375" src="http://www.youtube.com/embed/PFkOzDkools" frameborder="0" allowfullscreen></iframe>
+				
+							
 				
 				<p>You can play with the composition tool here:</p>
 				
