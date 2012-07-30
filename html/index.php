@@ -16,19 +16,26 @@
 			
 			<div id='explain'>
 				
-				<p><strong>[IT'S STILL A PROTOTYPE]</strong></p> 
+				<p><strong>[PROTOTYPE]</strong></p> 
 				<p>// <a href='blog'>Click here for the blog</a> // </p>
 				
-				<p>Music is nearly always played back on a computer - for example a smartphone or a laptop.</p>
+                <p>iTunes, Spotify, YouTube...  they all make finding music easier. It's inconvenient having to go round someone's house to listen to their music collection, or hunting through shops for a specific record. We miss it though.</p>
 				
-				<p>Rifff is a project to explore compositions that make use of that untapped processing power.</p>
+				<p>RIFFF came from thinking about ways to make owning a piece of music meaningful again.</p> 
 				
+				<p>RIFFF compositions are different every time you play them back. Not necessarily completely different, just different in the way that two live performances are different. That means you can't share them on YouTube or Spotify.</p>
+				
+				<p>Instead, they could be distributed in the following ways:</p>
+				<ul>
+				    <li>An embeddable widget for websites</li>
+				    <li>A native phone app</li>
+				    <li>A physical player built on Raspberry Pi</li>
+				</ul>
+				
+				<p><strong>Screencast explaining using the composter</strong></p>
 				<iframe width="500" height="375" src="http://www.youtube.com/embed/PFkOzDkools" frameborder="0" allowfullscreen></iframe>
 				
-				
-				<p>In doing this, Rifff adds friction to music sharing, which is great for all <a href='#friction'>kinds of reasons</a>.</p>
-				
-				<p>Ultimately, we'd like to build a physical player that becomes the embodiment the music.</p>
+                
 				
 				<p>Have a listen to a few test compositions below. Beware - they take a while to load.</p>
 				
@@ -54,18 +61,6 @@
 				<h3 id='user_nav' ><a href='signup.php'>Sign Up</a> | <a href='login.php'>Log In</a></h3>
 				
 				<p>We are working on a desktop version at the moment.</p>
-				
-				<h3><a name='friction'></a>Adding friction to sharing music</h3>
-				
-				<p>If a song plays back differently each time - be it a lot or a little - then it can be made into an MP3.</p>
-				
-				<p>If it can't be made into an MP3, then it is harder to share.</p>
-				
-				<p>This isn't about DRM. If an artist wants they can share the music by a freely available Flash embed on a website. Alternatively, they could share it as a phone app. Or...</p>
-				
-				<p>Ultimately, we'd love to make a bespoke physical device that plays back the RIFFF file. We're working on building that now. That's where the project started: making a physical object that embodies music and can't be made into an MP3.</p>
-				
-				<p>You used to be able to tell a lot about a person by their CD collection. MP3s mean very little, exactly because they are so easy to share. Physical objects bring scarcity, and meaning, back.</p>
 				
 				<h3>I'm a geek...</h3>
 				
