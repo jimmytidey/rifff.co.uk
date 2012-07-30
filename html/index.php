@@ -16,12 +16,15 @@
 			
 			<div id='explain'>
 				
-				<p><strong>[PROTOTYPE]</strong></p> 
+				<p><strong>[IT'S STILL A PROTOTYPE]</strong></p> 
 				<p>// <a href='blog'>Click here for the blog</a> // </p>
 				
 				<p>Music is nearly always played back on a computer - for example a smartphone or a laptop.</p>
 				
 				<p>Rifff is a project to explore compositions that make use of that untapped processing power.</p>
+				
+				<iframe width="500" height="375" src="http://www.youtube.com/embed/PFkOzDkools" frameborder="0" allowfullscreen></iframe>
+				
 				
 				<p>In doing this, Rifff adds friction to music sharing, which is great for all <a href='#friction'>kinds of reasons</a>.</p>
 				
