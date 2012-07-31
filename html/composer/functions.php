@@ -1,5 +1,4 @@
-<?
-function structure_list($folder_name, $type) {
+<? function structure_list($folder_name, $type) {
 	// open this directory 
 	$myDirectory = opendir($folder_name);
 	$dirArray = '';
