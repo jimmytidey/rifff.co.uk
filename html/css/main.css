@@ -50,7 +50,7 @@ a:link, a:hover, a:active, a:visited {
 	margin-top:4px;
 }
 #auth input { 
-
+	float:left;
 	margin-top:4px;
 }
 
