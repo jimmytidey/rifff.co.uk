@@ -17,5 +17,7 @@ header('Content-type: application/json');
 
 $file_json = read_json("projects/$user_id/$project_name/list.json");
 echo $file_json;
+echo "UID ". $user_id;
+echo "project name ". $project_name;
 
 ?>
